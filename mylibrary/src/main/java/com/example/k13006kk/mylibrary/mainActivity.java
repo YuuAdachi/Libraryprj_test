@@ -73,6 +73,7 @@ public class mainActivity {
                     //System.out.println(jsonObject.getString("room_number")); // "fuga"
                     //System.out.println(jsonObject.getString("room_name"));
 
+                    /*
                     System.out.println(jsonObject.getString("building_id"));
                     System.out.println(jsonObject.getString("building_name"));
                     System.out.println(jsonObject.getString("roomnumber_id"));
@@ -80,6 +81,7 @@ public class mainActivity {
                     System.out.println(jsonObject.getString("room_id"));
                     System.out.println(jsonObject.getString("beacon_identifier"));
                     System.out.println(jsonObject.getString("room_name"));
+                    */
 
                     stringArray[0] = jsonObject.getString("building_id");
                     stringArray[1] = jsonObject.getString("building_name");

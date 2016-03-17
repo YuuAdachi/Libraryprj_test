@@ -21,6 +21,9 @@ import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.startup.BootstrapNotifier;
 import org.altbeacon.beacon.startup.RegionBootstrap;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class Background  extends Service/* implements BootstrapNotifier */{
 
 
@@ -32,11 +35,15 @@ public class Background  extends Service/* implements BootstrapNotifier */{
 
     //Region region;
 
+    BeaconApplication beaconApplication = new BeaconApplication();
+
+
     @Override
     public void onCreate() {
         super.onCreate();
 
-        BeaconApplication beaconApplication = new BeaconApplication();
+
+        final BluetoothManager bluetoothManager2 = (BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);
 
         //beaconManager2 = BeaconManager.getInstanceForApplication(this);
 
@@ -46,12 +53,22 @@ public class Background  extends Service/* implements BootstrapNotifier */{
 
         //beaconApplication.BeaconScan(context, beaconManager2, regionBootstrap2);
 
-        final BluetoothManager bluetoothManager2 = (BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);
-
         beaconApplication.BeaconScan2(context, bluetoothManager2);
 
-    }
+        /*
+        TimerTask scan = new TimerTask() {
+            public void run() {
 
+                beaconApplication.BeaconScan2(context, bluetoothManager2);
+
+            }
+        };
+
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(scan, 0, 4600);
+        */
+
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

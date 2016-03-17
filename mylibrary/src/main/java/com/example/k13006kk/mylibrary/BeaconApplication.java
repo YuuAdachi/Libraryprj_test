@@ -30,6 +30,8 @@ import org.altbeacon.beacon.startup.RegionBootstrap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class BeaconApplication /*extends Service implements BootstrapNotifier */{
 
@@ -109,9 +111,9 @@ public class BeaconApplication /*extends Service implements BootstrapNotifier */
 
         // Bluetooth Adapter の取得
         BluetoothManager bluetoothManager = bluetoothManager2;
-        BluetoothAdapter mBluetoothAdapter = bluetoothManager.getAdapter();
+        final BluetoothAdapter mBluetoothAdapter = bluetoothManager.getAdapter();
 
-        BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+        final BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
             @Override
             public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
 
@@ -172,7 +174,33 @@ public class BeaconApplication /*extends Service implements BootstrapNotifier */
         };
 
         // BLE のスキャン開始
-        mBluetoothAdapter.startLeScan(mLeScanCallback);
+        //mBluetoothAdapter.startLeScan(mLeScanCallback);
+
+
+
+        TimerTask scanStart = new TimerTask() {
+            public void run() {
+
+                mBluetoothAdapter.startLeScan(mLeScanCallback);
+                Log.d("scanStart","START");
+
+            }
+        };
+
+        TimerTask scanStop = new TimerTask() {
+            public void run() {
+
+                mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                Log.d("scanStop", "STOP");
+
+            }
+        };
+
+
+        Timer timer1 = new Timer();
+        Timer timer2 = new Timer();
+        timer1.scheduleAtFixedRate(scanStart, 0, 4600);
+        timer2.scheduleAtFixedRate(scanStop, 400, 4600);
 
 
     }

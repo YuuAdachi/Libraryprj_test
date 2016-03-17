@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         TextView tv3 = (TextView) findViewById(R.id.minor);
         tv3.setText(stringArray[9]);
 
+        /*
         System.out.println(stringArray[0]);
         System.out.println(stringArray[1]);
         System.out.println(stringArray[2]);
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println(stringArray[4]);
         System.out.println(stringArray[5]);
         System.out.println(stringArray[6]);
+        */
 
     }
 
