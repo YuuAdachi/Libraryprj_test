@@ -103,15 +103,82 @@ public class BeaconApplication /*extends Service implements BootstrapNotifier */
 
     }*/
 
-    public void BeaconScan2(String room_uuid){
+    public void BeaconScan2(Context context, BluetoothManager bluetoothManager2){
 
-        DataHolder holder = DataHolder.getInstance();
-        holder.setTestString(room_uuid);
+        this.context = context;
+
+        // Bluetooth Adapter の取得
+        BluetoothManager bluetoothManager = bluetoothManager2;
+        BluetoothAdapter mBluetoothAdapter = bluetoothManager.getAdapter();
+
+        BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+            @Override
+            public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
+
+                //ここに結果に対して行う処理を記述する
+
+                if(scanRecord.length > 30)
+                {
+                    //iBeacon の場合 6 byte 目から、 9 byte 目はこの値に固定されている。
+                    if((scanRecord[5] == (byte)0x4c) && (scanRecord[6] == (byte)0x00) &&
+                            (scanRecord[7] == (byte)0x02) && (scanRecord[8] == (byte)0x15))
+                    {
+                        String uuid = IntToHex2(scanRecord[9] & 0xff)
+                                + IntToHex2(scanRecord[10] & 0xff)
+                                + IntToHex2(scanRecord[11] & 0xff)
+                                + IntToHex2(scanRecord[12] & 0xff)
+                                + "-"
+                                + IntToHex2(scanRecord[13] & 0xff)
+                                + IntToHex2(scanRecord[14] & 0xff)
+                                + "-"
+                                + IntToHex2(scanRecord[15] & 0xff)
+                                + IntToHex2(scanRecord[16] & 0xff)
+                                + "-"
+                                + IntToHex2(scanRecord[17] & 0xff)
+                                + IntToHex2(scanRecord[18] & 0xff)
+                                + "-"
+                                + IntToHex2(scanRecord[19] & 0xff)
+                                + IntToHex2(scanRecord[20] & 0xff)
+                                + IntToHex2(scanRecord[21] & 0xff)
+                                + IntToHex2(scanRecord[22] & 0xff)
+                                + IntToHex2(scanRecord[23] & 0xff)
+                                + IntToHex2(scanRecord[24] & 0xff);
+
+                        String major = IntToHex2(scanRecord[25] & 0xff) + IntToHex2(scanRecord[26] & 0xff);
+                        String minor = IntToHex2(scanRecord[27] & 0xff) + IntToHex2(scanRecord[28] & 0xff);
+
+                        int scan_rssi = rssi;
+
+                        DataHolder holder = DataHolder.getInstance();
+                        String[] beacon_info = new String[3];
+                        beacon_info[0] = uuid;
+                        beacon_info[1] = major;
+                        beacon_info[2] = minor;
+                        holder.setTestString(beacon_info);
+
+                        Log.d("Beacon", "UUID:" + uuid + ", major:" + major + ", minor:" + minor + ", RSSI:" + scan_rssi);
+
+                    }
+                }
+
+            }
+
+            //intデータを 2桁16進数に変換するメソッド
+            public String IntToHex2(int i) {
+                char hex_2[] = {Character.forDigit((i>>4) & 0x0f,16),Character.forDigit(i&0x0f, 16)};
+                String hex_2_str = new String(hex_2);
+                return hex_2_str.toUpperCase();
+            }
+        };
+
+        // BLE のスキャン開始
+        mBluetoothAdapter.startLeScan(mLeScanCallback);
+
 
     }
 
 
-
+/*
     public void BeaconScan3(Context context, BluetoothManager bluetoothManager2) {
 
         this.context = context;
@@ -148,6 +215,7 @@ public class BeaconApplication /*extends Service implements BootstrapNotifier */
                 for (int i = 2; i < scanRecord.length; i++) {
                     msg += Byte.toString(scanRecord[i]) + "";
                 }*/
+                /*
 
                 String uuid = IntToHex2(scanRecord[2] & 0xff)
                         + IntToHex2(scanRecord[3] & 0xff)
@@ -199,7 +267,7 @@ public class BeaconApplication /*extends Service implements BootstrapNotifier */
 
         mBluetoothLeScanner.startScan(mScanFilters, mScanSettings, mScanCallback);
 
-    }
+    }*/
 
 
 /*

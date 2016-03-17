@@ -8,7 +8,8 @@ public class DataHolder {
     static DataHolder _instance = null;
     String test ="A";
 
-
+    String[] stringArray = new String[3];
+    //stringArray = new String[8];
     /**
      * 常にこのメソッドから呼び出すようにする
      *
@@ -25,11 +26,13 @@ public class DataHolder {
 
 
 
-    public String getTestString(){
-        return test;
+    public String[] getTestString(){
+        //return test;
+        return stringArray;
     }
 
-    public void setTestString(String txt){
-        this.test = txt;
+    public void setTestString(/*String txt*/String[] string){
+        //this.test = txt;
+        this.stringArray = string;
     }
 }

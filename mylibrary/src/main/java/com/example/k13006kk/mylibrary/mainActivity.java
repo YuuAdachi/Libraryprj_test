@@ -37,12 +37,15 @@ public class mainActivity {
     }
     */
 
-    public String data_com(String url) {
+    public String[] data_com(String url) {
 
-        String room_uuid;
+        String[] beacon_info = new String[3];
+
+        final String[] stringArray = new String[10];
+        //stringArray = new String[8];
 
         DataHolder holder = DataHolder.getInstance();
-        room_uuid = holder.getTestString();
+        beacon_info = holder.getTestString();
 
         /*
         TextView tv = (TextView) findViewById(R.id.uuid);//テスト用
@@ -52,7 +55,7 @@ public class mainActivity {
         AsyncHttpClient client = new AsyncHttpClient(); //通信準備
 
         final RequestParams params = new RequestParams(); //リクエストパラメータ
-        params.put("uuid", room_uuid); //送るパラメータ1
+        params.put("uuid", beacon_info[0]); //送るパラメータ1
         String server_url = url;//"http://192.168.100.211:808/beacon_server.php""""http://192.168.51.180:808/beacon_server.php
 
         client.get(server_url, params, new AsyncHttpResponseHandler() {
@@ -67,8 +70,26 @@ public class mainActivity {
                     JSONObject jsonObject = new JSONObject(json);
 
 
-                    System.out.println(jsonObject.getString("room_number")); // "fuga"
+                    //System.out.println(jsonObject.getString("room_number")); // "fuga"
+                    //System.out.println(jsonObject.getString("room_name"));
+
+                    System.out.println(jsonObject.getString("building_id"));
+                    System.out.println(jsonObject.getString("building_name"));
+                    System.out.println(jsonObject.getString("roomnumber_id"));
+                    System.out.println(jsonObject.getString("roomnumber_no"));
+                    System.out.println(jsonObject.getString("room_id"));
+                    System.out.println(jsonObject.getString("beacon_identifier"));
                     System.out.println(jsonObject.getString("room_name"));
+
+                    stringArray[0] = jsonObject.getString("building_id");
+                    stringArray[1] = jsonObject.getString("building_name");
+                    stringArray[2] = jsonObject.getString("roomnumber_id");
+                    stringArray[3] = jsonObject.getString("roomnumber_no");
+                    stringArray[4] = jsonObject.getString("room_id");
+                    stringArray[5] = jsonObject.getString("beacon_identifier");
+                    stringArray[6] = jsonObject.getString("room_name");
+
+
                     /*
                     TextView tv = (TextView) findViewById(R.id.room_id);//？を指定
                     tv.setText(jsonObject.getString("room_number"));//？を変更
@@ -97,6 +118,10 @@ public class mainActivity {
 
         });
 
-        return room_uuid;
+        stringArray[7] = beacon_info[0];
+        stringArray[8] = beacon_info[1];
+        stringArray[9] = beacon_info[2];
+
+        return stringArray;
     }
 }

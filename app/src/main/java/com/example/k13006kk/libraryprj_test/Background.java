@@ -48,7 +48,7 @@ public class Background  extends Service/* implements BootstrapNotifier */{
 
         final BluetoothManager bluetoothManager2 = (BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);
 
-        beaconApplication.BeaconScan3(context, bluetoothManager2);
+        beaconApplication.BeaconScan2(context, bluetoothManager2);
 
     }
 

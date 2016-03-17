@@ -32,12 +32,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClick(View view){
+
+        String[] stringArray = new String[10];
+
         mainActivity main = new mainActivity();
 
-        String uuid = main.data_com(url);
+        stringArray = main.data_com(url);
 
         TextView tv = (TextView) findViewById(R.id.uuid);
-        tv.setText(uuid);
+        tv.setText(stringArray[7]);
+
+        TextView tv2 = (TextView) findViewById(R.id.major);
+        tv2.setText(stringArray[8]);
+
+        TextView tv3 = (TextView) findViewById(R.id.minor);
+        tv3.setText(stringArray[9]);
+
+        System.out.println(stringArray[0]);
+        System.out.println(stringArray[1]);
+        System.out.println(stringArray[2]);
+        System.out.println(stringArray[3]);
+        System.out.println(stringArray[4]);
+        System.out.println(stringArray[5]);
+        System.out.println(stringArray[6]);
+
     }
 
 
