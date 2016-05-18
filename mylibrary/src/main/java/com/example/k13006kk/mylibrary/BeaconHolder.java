@@ -1,14 +1,15 @@
 package com.example.k13006kk.mylibrary;
 
+
 /**
  * Created by k13006kk on 2016/02/22.
  */
-public class DataHolder {
+public class BeaconHolder {
 
-    static DataHolder _instance = null;
-    String test ="A";
+    static BeaconHolder _instance = null;
+    //String test ="A";
 
-    String[] stringArray = new String[3];
+    String[] stringArray = new String[4];
     //stringArray = new String[8];
     /**
      * 常にこのメソッドから呼び出すようにする
@@ -17,9 +18,9 @@ public class DataHolder {
      * @return
      */
 
-    static public DataHolder getInstance(){
+    static public BeaconHolder getInstance(){
         if(_instance==null){
-            _instance = new DataHolder();
+            _instance = new BeaconHolder();
         }
         return _instance;
     }
@@ -31,7 +32,7 @@ public class DataHolder {
         return stringArray;
     }
 
-    public void setTestString(/*String txt*/String[] string){
+    public void setTestString(String[] string){
         //this.test = txt;
         this.stringArray = string;
     }

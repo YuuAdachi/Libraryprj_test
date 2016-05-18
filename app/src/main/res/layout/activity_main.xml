@@ -15,9 +15,9 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="room_uuid"
         android:id="@+id/uuid"
-        android:layout_marginTop="41dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_above="@+id/major"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -25,9 +25,9 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="major"
         android:id="@+id/major"
-        android:layout_marginTop="64dp"
-        android:layout_below="@+id/uuid"
-        android:layout_centerHorizontal="true" />
+        android:layout_above="@+id/minor"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="63dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -36,15 +36,17 @@
         android:text="minor"
         android:id="@+id/minor"
         android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
         android:layout_alignStart="@+id/major" />
 
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
-        android:id="@+id/button"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="93dp"
-        android:onClick="onClick" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="rssi"
+        android:id="@+id/rssi"
+        android:layout_marginTop="45dp"
+        android:layout_below="@+id/minor"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

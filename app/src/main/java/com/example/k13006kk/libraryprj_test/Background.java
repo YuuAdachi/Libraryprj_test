@@ -6,6 +6,7 @@ package com.example.k13006kk.libraryprj_test;
 
 import android.app.Service;
 import android.bluetooth.BluetoothManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.k13006kk.mylibrary.BeaconApplication;
+import com.example.k13006kk.mylibrary.DBaccess;
 
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.Region;
@@ -27,46 +29,48 @@ import java.util.TimerTask;
 public class Background  extends Service/* implements BootstrapNotifier */{
 
 
-    Context context;
+    //Context context;
 
-    //BeaconManager beaconManager2;
+    BeaconManager beaconManager;
 
     //RegionBootstrap regionBootstrap2;
 
     //Region region;
 
-    BeaconApplication beaconApplication = new BeaconApplication();
+    //BeaconApplication beaconApplication = new BeaconApplication();
+
+    String url = "http://192.168.100.211/beacon_load.php";
+
 
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+        ContentResolver resolver = getContentResolver();
+
+
+        //this.context = new Background();
+
+        BeaconApplication beaconApplication = new BeaconApplication();
+        DBaccess dBaccess = new DBaccess();
+
+        //beaconApplication.setNotify();
 
         final BluetoothManager bluetoothManager2 = (BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);
 
-        //beaconManager2 = BeaconManager.getInstanceForApplication(this);
+        int scan1 = 2600;//基本は4.6秒間隔
+        int scan2 = 800;//基本は0.4秒間スキャン
 
-        //region = new Region("uuid-region-bootstrap-001", null, null, null);
+        beaconApplication.BeaconScan(resolver, bluetoothManager2, scan1,scan2,url);
+        //dBaccess.monitoring(resolver);
 
-        //regionBootstrap2 = new RegionBootstrap(this, region);
+        //beaconManager = BeaconManager.getInstanceForApplication(this);
 
-        //beaconApplication.BeaconScan(context, beaconManager2, regionBootstrap2);
+        //beaconApplication.Beaconscanalt2(context,url);
 
-        beaconApplication.BeaconScan2(context, bluetoothManager2);
-
-        /*
-        TimerTask scan = new TimerTask() {
-            public void run() {
-
-                beaconApplication.BeaconScan2(context, bluetoothManager2);
-
-            }
-        };
-
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(scan, 0, 4600);
-        */
+        //beaconApplication.Beaconscanalt1(context);
+        //beaconApplication.onBeaconServiceConnect();
 
     }
 
@@ -87,46 +91,5 @@ public class Background  extends Service/* implements BootstrapNotifier */{
     public IBinder onBind(Intent intent) {
         return null;
     }
-/*
-    @Override
-    public void didEnterRegion(Region region) {
-        // 領域に入場した
 
-        Log.d(TAG, "Enter Region");
-
-        try {
-            // レンジング開始
-            beaconManager.startRangingBeaconsInRegion(region);
-        } catch(RemoteException e) {
-            // 例外が発生した場合
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override
-    public void didExitRegion(Region region) {
-        // 領域から退場した
-
-        Log.d(TAG, "Exit Region");
-
-        try {
-            // レンジング停止
-            beaconManager.stopRangingBeaconsInRegion(region);
-        } catch(RemoteException e) {
-            // 例外が発生した場合
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override
-    public void didDetermineStateForRegion(int i, Region region) {
-        // 入退場状態が変更された
-
-        Log.d(TAG, "Determine State: " + i);
-
-    }
-
-*/
 }

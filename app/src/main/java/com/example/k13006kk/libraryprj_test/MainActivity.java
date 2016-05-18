@@ -1,12 +1,17 @@
 package com.example.k13006kk.libraryprj_test;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.k13006kk.mylibrary.mainActivity;
+import com.example.k13006kk.mylibrary.BeaconinfoHolder;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,7 +24,9 @@ public class MainActivity extends AppCompatActivity {
     （取得した情報を画面に表示する）
      */
 
-    String url = "http://192.168.100.211/beacon_attendance.php";
+    BeaconinfoHolder beaconinfo = new BeaconinfoHolder();
+    String[] stringArray;
+    Handler _handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,15 +36,67 @@ public class MainActivity extends AppCompatActivity {
         //バックグラウンド処理のためのServiceの開始
         startService(new Intent(MainActivity.this, Background.class));
 
+        _handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                beaconinfoView();
+
+                _handler.postDelayed(this, 500);
+
+            }
+        }, 0);
+
     }
 
-    public void onClick(View view){
+    public void beaconinfoView(){
 
-        String[] stringArray = new String[10];
+            stringArray = beaconinfo.getData();
 
+            TextView tv = (TextView) findViewById(R.id.uuid);
+            tv.setText(stringArray[7]);
+
+            TextView tv2 = (TextView) findViewById(R.id.major);
+            tv2.setText(stringArray[8]);
+
+            TextView tv3 = (TextView) findViewById(R.id.minor);
+            tv3.setText(stringArray[9]);
+
+            TextView tv4 = (TextView) findViewById(R.id.rssi);
+            tv4.setText(stringArray[10]);
+
+    }
+
+    public void onClick1(View view){
+
+        _handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                beaconinfoView();
+
+                _handler.postDelayed(this, 0);
+
+            }
+        }, 0);
+
+        //String[] stringArray;
+
+        //BeaconinfoHolder beaconinfo = new BeaconinfoHolder();
+
+
+        /*
         mainActivity main = new mainActivity();
 
-        stringArray = main.data_com(url);
+        BeaconinfoHolder database = BeaconinfoHolder.getinstance();
+        */
+
+
+        //main.data_com(url);
+
+
+        /*
+        stringArray = beaconinfo.getData();
 
         TextView tv = (TextView) findViewById(R.id.uuid);
         tv.setText(stringArray[7]);
@@ -47,6 +106,9 @@ public class MainActivity extends AppCompatActivity {
 
         TextView tv3 = (TextView) findViewById(R.id.minor);
         tv3.setText(stringArray[9]);
+
+        TextView tv4 = (TextView) findViewById(R.id.rssi);
+        tv4.setText(stringArray[10]);
 
         /*
         System.out.println(stringArray[0]);
@@ -58,6 +120,13 @@ public class MainActivity extends AppCompatActivity {
         System.out.println(stringArray[6]);
         */
 
+        //Log.d("Server",stringArray[0] + "," + stringArray[1] + "," + stringArray[2] + "," + stringArray[3] + "," + stringArray[4] + "," + stringArray[5] + "," + stringArray[6]);
+        //Log.d("Server2",stringArray[6]);
+
+    }
+
+    public void onClick2(View view){
+        _handler.removeCallbacksAndMessages(null);
     }
 
 
