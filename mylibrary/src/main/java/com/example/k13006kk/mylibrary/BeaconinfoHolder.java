@@ -10,7 +10,7 @@ public class BeaconinfoHolder {
     static BeaconinfoHolder _instance = null;
     //String test ="A";
 
-    static String[] stringArray = new String[11];
+    static String[] stringArray = new String[4];
 
     /**
      * 常にこのメソッドから呼び出すようにする

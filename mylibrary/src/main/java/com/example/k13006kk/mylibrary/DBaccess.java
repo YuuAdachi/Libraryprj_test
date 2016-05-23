@@ -34,6 +34,8 @@ public class DBaccess extends AppCompatActivity {
         uri = ContentUris.withAppendedId(UserColumns.CONTENT_URI, 1);
         ContentValues values = new ContentValues();
         values.clear();
+
+        // nameはいらないかも
         values.put(UserColumns.NAME, "name");
         values.put(UserColumns.ROOM, roomtest);
         values.put(UserColumns.DATETIME, getNowDate());

@@ -54,16 +54,16 @@ public class MainActivity extends AppCompatActivity {
             stringArray = beaconinfo.getData();
 
             TextView tv = (TextView) findViewById(R.id.uuid);
-            tv.setText(stringArray[7]);
+            tv.setText(stringArray[0]);
 
             TextView tv2 = (TextView) findViewById(R.id.major);
-            tv2.setText(stringArray[8]);
+            tv2.setText(stringArray[1]);
 
             TextView tv3 = (TextView) findViewById(R.id.minor);
-            tv3.setText(stringArray[9]);
+            tv3.setText(stringArray[2]);
 
             TextView tv4 = (TextView) findViewById(R.id.rssi);
-            tv4.setText(stringArray[10]);
+            tv4.setText(stringArray[3]);
 
     }
 

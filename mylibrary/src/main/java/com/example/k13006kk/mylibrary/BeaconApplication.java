@@ -253,6 +253,22 @@ public class BeaconApplication{
     }*/
     public String[] beforebeacon = {"A","A","A"};
 
+    // 同じbeaconが連続何回受信されたかカウントする変数（入室判定用）
+    public int entercount = 1;
+    // 入室通知を出したかチェックする変数
+    public boolean entercheck = false;
+    // 直前に通知したbeacon情報を保存する配列
+    public String[] enterbefore = {"B","B","B"};
+    // enterbeforeと新たに受信したものの一致を判定する配列
+    public boolean[] notifycheck = new boolean[3];
+
+    // UUID,major,minor,RSSIの4つの情報を入れる
+    public String[] nearbeacon2 = new String[4];
+    // 10個のBeacon(さらにそれぞれを10個、４つの情報を持つ)を監視する
+    public String[][][] beaconlist2 = new String[10][10][4];
+    // ソート用配列
+    public String[][][] sortbeacon = new String[10][10][4];
+
     // beaconの更新があったかをチェックする配列
     boolean[] updatecheck = new boolean[10];
     // 更新フラグをリセットする関数
@@ -357,15 +373,21 @@ public class BeaconApplication{
                         beacon_info[2] = minor;
                         beacon_info[3] = scan_rssi;
 
+                        // 最も強いbeacon情報を取得
                         String[] beacon_info2 = beaconlist2(beacon_info);
-                        String roomtest = beacon_info2[1] + ":" + beacon_info2[2];
+
+                        //String roomtest = beacon_info2[1] + ":" + beacon_info2[2];
 
                         // 最終的にここはDBに通知するプログラムになる
 
-                        db.dbaccess(resolver1,roomtest);
+                        //db.dbaccess(resolver1,roomtest);
 
                         holder.setTestString(beacon_info2);
 
+                        // 画面表示用
+                        beaconlog();
+
+                        // 前回と同じものか判定
                         boolean[] check = new boolean[3];
                         for( int i = 0; i < 3; i++){
                             if( beforebeacon[i].equals(beacon_info2[i])){
@@ -373,11 +395,48 @@ public class BeaconApplication{
                             }
                         }
 
-                        scanEvent(surl);
+                        //scanEvent(surl);
 
-                        if(check[0] && check[1] && check[2]) {
-                        }else{
-                           // scanEvent(surl);
+                        // 通知したものと同じものか判定
+                        for( int i = 0; i < 3; i++){
+                            if( enterbefore[i].equals(beacon_info2[i])){
+                                notifycheck[i] = true;
+                            }
+                        }
+
+                        // 直前に通知したものと同じならなにもしない
+                        if(notifycheck[0] && notifycheck[1] && notifycheck[2]){
+                        }
+                        // そうでないなら以下の処理
+                        else {
+                            // 前回と同じものならカウントアップ
+                            if (check[0] && check[1] && check[2]) {
+                                entercount++;
+                                // 46回連続（約11秒）第1位のbeacon　かつまだ通知していないもの　ならその部屋にいるとする
+                                if (entercount == 46 && !entercheck) {
+                                    // データベースに通知
+                                    scanEvent(surl, resolver1);
+                                    // 入室判定をtrueに
+                                    entercheck = true;
+                                    // 通知したbeacon情報を保存
+                                    for (int i = 0; i < 3; i++) {
+                                        enterbefore[i] = beacon_info2[i];
+                                    }
+                                    // カウントリセット
+                                    entercount = 1;
+                                    Log.d("ENTER", "ENTER:" + enterbefore[2]);
+                                }
+                                // 違うものならカウントリセット
+                            } else {
+                                // 入室判定をfalseに
+                                entercheck = false;
+                                // カウントリセット
+                                entercount = 1;
+                                // 通信処理
+                                //scanEvent(surl, resolver1);
+                                // データベース操作
+                                //db.dbaccess(resolver1,roomtest);
+                            }
                         }
                         beforebeacon = beacon_info2;
                         Log.d("Beacon", "UUID:" + uuid + ", major:" + major + ", minor:" + minor + ", RSSI:" + scan_rssi);
@@ -432,15 +491,27 @@ public class BeaconApplication{
         TimerTask flgreset = new TimerTask() {
             public void run() {
                 // リセット関数
-                bupdcheckset();
+                updatecheck = bupdcheckset();
+            }
+        };
+        // beacon更新フラグを1周期＋スキャン1回毎にチェックして更新がないものを削除する
+        TimerTask remove = new TimerTask() {
+            public void run() {
+                // 削除関数
+                beaconlist2 = beaconremove(updatecheck, beaconlist2);
             }
         };
         // タイマーを動かす
         Timer timer3 = new Timer();
-        timer3.scheduleAtFixedRate(flgreset, 0, 6800);
+        Timer timer4 = new Timer();
+        timer3.scheduleAtFixedRate(flgreset, 0, 2*(scan1+scan2));
+        timer4.scheduleAtFixedRate(remove, 0, scan1+2*(scan1+scan2));
 
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /*
     public String[] nearbeacon = new String[4];
     public String[][] beaconlist = new String[20][4];
     boolean beaconlistflg = false;
@@ -503,10 +574,11 @@ public class BeaconApplication{
 
         // 最も近い(であろう)Beacon情報を返す
         return nearbeacon;
-    }
+    }*/
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /*
     // UUID,major,minor,RSSIの4つの情報を入れる
     public String[] nearbeacon2 = new String[4];
     // 10個のBeacon(さらにそれぞれを10個、４つの情報を持つ)を監視する
@@ -628,12 +700,12 @@ public class BeaconApplication{
             //mcdt = countdowntimerset();
             //mcdtcheck = countdowntimercheckset();
             beaconlistflg2 = true;
-            //updatecheck = bupdcheckset();
+            updatecheck = bupdcheckset();
         }else{
         }
         sortbeacon = beaconlistArray22();
 
-        updatecheck = bupdcheckset();
+        //updatecheck = bupdcheckset();
 
         /*
         // 残り時間が少ないものをキープ
@@ -918,8 +990,12 @@ public class BeaconApplication{
     }*/
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void scanEvent(String url){
+    public void scanEvent(String url, ContentResolver resolver){
 
+        final DBaccess db = new DBaccess();
+        final ContentResolver resolver1 = resolver;
+
+        Log.d("SCANEVENT", "call");
         // Beacon情報を受け取るための配列
         final String[] beacon_info;
         // 受け取ったBeacon情報とデータベースの情報をまとめるための配列
@@ -975,6 +1051,7 @@ public class BeaconApplication{
                     stringArray[1] = "B";
                     stringArray[2] = "C";
                     stringArray[3] = "D";
+                    //stringArray[3] = jsonObject.getString("roomnumber_no");
                     stringArray[4] = "E";
                     stringArray[5] = "F";
                     stringArray[6] = "G";
@@ -984,7 +1061,9 @@ public class BeaconApplication{
                     stringArray[9] = beacon_info[2];
                     stringArray[10] = beacon_info[3];
                     // databaseクラスにBeacon情報とデータベースの情報を渡す
-                    beaconinfoHolder.setData(stringArray);
+                    //beaconinfoHolder.setData(stringArray);
+                    // データベース操作
+                    db.dbaccess(resolver1, stringArray[3]);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -1011,13 +1090,26 @@ public class BeaconApplication{
                 stringArray[10] = beacon_info[3];
 
                 // databaseクラスにBeacon情報とデータベースの情報を渡す
-                beaconinfoHolder.setData(stringArray);
+                //beaconinfoHolder.setData(stringArray);
+                db.dbaccess(resolver1, "roomname");
 
             }
 
 
         });
 
+    }
+
+    // 確認用に画面に表示するための関数
+    public void beaconlog(){
+        // Beacon情報を受け取るための配列
+        final String[] beacon_info;
+        // DtaHolderクラスからBeacon情報を受け取る
+        BeaconHolder holder = BeaconHolder.getInstance();
+        beacon_info = holder.getTestString();
+        // databaseクラスにBeacon情報とデータベースの情報を渡す
+        BeaconinfoHolder beaconinfoHolder = BeaconinfoHolder.getinstance();
+        beaconinfoHolder.setData(beacon_info);
     }
 
 }
