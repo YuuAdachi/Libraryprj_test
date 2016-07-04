@@ -23,15 +23,15 @@ public class UserDBHelper extends SQLiteOpenHelper {
         // データベースのテーブルを作成する
         sqLiteDatabase.execSQL("CREATE TABLE " + UserColumns.TABLE + " ("
                 + UserColumns._ID + " INTEGER PRIMARY KEY,"
-                + UserColumns.NAME + " TEXT,"
+                //+ UserColumns.NAME + " TEXT,"
                 + UserColumns.ROOM + " TEXT,"
                 + UserColumns.DATETIME + " TEXT"
                 + ");");
         // table row insert
         sqLiteDatabase.execSQL("insert into " + UserColumns.TABLE + "("
-                + UserColumns.NAME + ","
+                //+ UserColumns.NAME + ","
                 + UserColumns.ROOM + ","
-                + UserColumns.DATETIME + ") values ('NULL_NAME', 'NULL_ROOM', 'NULL_TIME');");
+                + UserColumns.DATETIME + ") values ('NULL_ROOM', 'NULL_TIME');");
     }
 
     @Override

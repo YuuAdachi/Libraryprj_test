@@ -18,20 +18,21 @@ import android.util.Log;
 import com.example.k13006kk.mylibrary.BeaconApplication;
 import com.example.k13006kk.mylibrary.DBaccess;
 
+/*
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.startup.BootstrapNotifier;
 import org.altbeacon.beacon.startup.RegionBootstrap;
-
+*/
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Background  extends Service/* implements BootstrapNotifier */{
 
 
-    //Context context;
+    Context context;
 
-    BeaconManager beaconManager;
+    //BeaconManager beaconManager;
 
     //RegionBootstrap regionBootstrap2;
 
@@ -50,7 +51,7 @@ public class Background  extends Service/* implements BootstrapNotifier */{
         ContentResolver resolver = getContentResolver();
 
 
-        //this.context = new Background();
+        this.context = new Background();
 
         BeaconApplication beaconApplication = new BeaconApplication();
         DBaccess dBaccess = new DBaccess();

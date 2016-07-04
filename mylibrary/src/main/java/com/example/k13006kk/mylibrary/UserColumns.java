@@ -20,7 +20,7 @@ public class UserColumns implements BaseColumns {
     // テーブル名
     public static final String TABLE = "userdata";
     // カラム 名前
-    public static final String NAME = "name";
+    //public static final String NAME = "name";
     // カラム 部屋
     public static final String ROOM = "room";
     // カラム 日時

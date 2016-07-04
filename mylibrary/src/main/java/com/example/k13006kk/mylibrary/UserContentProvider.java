@@ -56,7 +56,7 @@ public class UserContentProvider extends ContentProvider {
         SQLiteDatabase db = mDBHelper.getReadableDatabase();
         Cursor cursor = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
         //通知機能
-        //cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
 

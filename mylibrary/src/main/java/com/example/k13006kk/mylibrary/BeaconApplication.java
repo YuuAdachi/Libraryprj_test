@@ -23,6 +23,9 @@ import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+/*
+compile 'org.altbeacon:android-beacon-library:2+@aar'
+
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
@@ -33,6 +36,7 @@ import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.startup.BootstrapNotifier;
 import org.altbeacon.beacon.startup.RegionBootstrap;
+*/
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,8 +64,8 @@ public class BeaconApplication{
     String allbeaconinfo1 = "a";
     String allbeaconinfo2 = "b";
 
-    BeaconManager beaconManager;
-    RegionBootstrap mRegionBootstrap;
+    //BeaconManager beaconManager;
+    //RegionBootstrap mRegionBootstrap;
 
     /*
     public void Beaconscanalt2(Context context, String url){
@@ -253,14 +257,23 @@ public class BeaconApplication{
     }*/
     public String[] beforebeacon = {"A","A","A"};
 
+    public static String surl;
+    public static ContentResolver resolver1;
+
     // 同じbeaconが連続何回受信されたかカウントする変数（入室判定用）
     public int entercount = 1;
-    // 入室通知を出したかチェックする変数
-    public boolean entercheck = false;
+    // 入室通知を出したかチェックするフラグ
+    public static boolean entercheck = false;
+    // 入室判定が始まっているかチェックするフラグ
+    public boolean timercheck = false;
+    // タイマーのインスタンスがセットされているかチェックするフラグ
+    public boolean timersetcheck = false;
+    // タイマー宣言
+    MyCountDownTimer mcdt;
     // 直前に通知したbeacon情報を保存する配列
     public String[] enterbefore = {"B","B","B"};
     // enterbeforeと新たに受信したものの一致を判定する配列
-    public boolean[] notifycheck = new boolean[3];
+    //public boolean[] notifycheck = new boolean[3];
 
     // UUID,major,minor,RSSIの4つの情報を入れる
     public String[] nearbeacon2 = new String[4];
@@ -300,12 +313,47 @@ public class BeaconApplication{
         return removecheck;
     }
 
+    // カウントダウンタイマー
+    static class MyCountDownTimer extends CountDownTimer {
+
+        BeaconHolder holder = BeaconHolder.getInstance();
+        String[] beacon;
+
+        public MyCountDownTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onFinish() {
+            // カウントダウン完了後に呼ばれる
+            //mcdtfinish = true;
+            entercheck = true;
+            // データベースに通知
+            beacon = holder.getTestString();
+            scanEvent(surl, resolver1);
+            Log.d("ENTER", "ENTER:" + beacon[2]);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            // インターバル(countDownInterval)毎に呼ばれる
+            // 残り時間をcountMillisに代入
+            //countMillis = millisUntilFinished;
+        }
+
+        //残り時間を返す。
+        /*
+        public final Long getCount()
+        {
+            return countMillis;
+        }*/
+    }
+
     public void BeaconScan(ContentResolver resolver, BluetoothManager bluetoothManager2, int scan1, int scan2, String url){
 
         //this.context = contexts;
-        final ContentResolver resolver1 = resolver;
-
-        final String surl = url;
+        resolver1 = resolver;
+        surl = url;
 
         final DBaccess db = new DBaccess();
 
@@ -398,46 +446,55 @@ public class BeaconApplication{
                         //scanEvent(surl);
 
                         // 通知したものと同じものか判定
+                        boolean[] notifycheck = new boolean[3];
                         for( int i = 0; i < 3; i++){
                             if( enterbefore[i].equals(beacon_info2[i])){
                                 notifycheck[i] = true;
                             }
                         }
 
-                        // 直前に通知したものと同じならなにもしない
-                        if(notifycheck[0] && notifycheck[1] && notifycheck[2]){
+                        if (!timersetcheck) {
+                            mcdt = new MyCountDownTimer(20000, 100);
                         }
-                        // そうでないなら以下の処理
+
+                        // 直前に通知したものと同じならなにもしない
+                        if (notifycheck[0] && notifycheck[1] && notifycheck[2]) {
+                        }// そうでないなら以下の処理
                         else {
-                            // 前回と同じものならカウントアップ
+                            // 前回と同じものなら
                             if (check[0] && check[1] && check[2]) {
-                                entercount++;
-                                // 46回連続（約11秒）第1位のbeacon　かつまだ通知していないもの　ならその部屋にいるとする
-                                if (entercount == 46 && !entercheck) {
-                                    // データベースに通知
-                                    scanEvent(surl, resolver1);
-                                    // 入室判定をtrueに
-                                    entercheck = true;
+                                // タイマーがスタートしておらず　かつ　入室判定がされていなかったら
+                                if (!timercheck && !entercheck) {
+                                    // タイマーがスタートしてなかったらタイマースタート
+                                    mcdt.start();
+                                    timersetcheck = true;
+                                    timercheck = true;
+                                } else if (entercheck) {
+                                    // タイマーがスタートしていたら
+                                    // 何もしない
+                                    // 入室判定があったら
                                     // 通知したbeacon情報を保存
-                                    for (int i = 0; i < 3; i++) {
-                                        enterbefore[i] = beacon_info2[i];
-                                    }
-                                    // カウントリセット
-                                    entercount = 1;
-                                    Log.d("ENTER", "ENTER:" + enterbefore[2]);
+                                    enterbefore = beacon_info2;
+                                    //for (int i = 0; i < 3; i++) {
+                                    //enterbefore[i] = beacon_info2[i];
+                                    //}
                                 }
-                                // 違うものならカウントリセット
-                            } else {
+                            }// RSSIの閾値判定は初回のみ行う　RSSIが-82以上だったら
+                            else if(Integer.parseInt(beacon_info2[3]) >= -82){
+                                // 別のものが受信されればタイマー停止
+                                mcdt.cancel();
+                                timersetcheck = false;
+                                timercheck = false;
                                 // 入室判定をfalseに
                                 entercheck = false;
-                                // カウントリセット
-                                entercount = 1;
                                 // 通信処理
                                 //scanEvent(surl, resolver1);
                                 // データベース操作
                                 //db.dbaccess(resolver1,roomtest);
                             }
                         }
+                        //}
+
                         beforebeacon = beacon_info2;
                         Log.d("Beacon", "UUID:" + uuid + ", major:" + major + ", minor:" + minor + ", RSSI:" + scan_rssi);
 
@@ -990,7 +1047,7 @@ public class BeaconApplication{
     }*/
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void scanEvent(String url, ContentResolver resolver){
+    public static void scanEvent(String url, ContentResolver resolver){
 
         final DBaccess db = new DBaccess();
         final ContentResolver resolver1 = resolver;
@@ -1040,9 +1097,9 @@ public class BeaconApplication{
                     //Log.d("Server2",jsonObject.getString("room_number"));
 
                     //stringArray[0] = jsonObject.getString("building_id");
-                    //stringArray[1] = jsonObject.getString("building_name");
+                    //stringArray[1] = jsonObject.getString("building_name");////////////////
                     //stringArray[2] = jsonObject.getString("roomnumber_id");
-                    //stringArray[3] = jsonObject.getString("roomnumber_no");
+                    //stringArray[3] = jsonObject.getString("roomnumber_no");/////////////// room_name////
                     //stringArray[4] = jsonObject.getString("room_id");
                     //stringArray[5] = jsonObject.getString("beacon_identifier");
                     //stringArray[6] = jsonObject.getString("");
@@ -1091,8 +1148,8 @@ public class BeaconApplication{
 
                 // databaseクラスにBeacon情報とデータベースの情報を渡す
                 //beaconinfoHolder.setData(stringArray);
-                db.dbaccess(resolver1, "roomname");
-
+                db.dbaccess(resolver1, stringArray[8] + ":" + stringArray[9]);
+                Log.d("db", stringArray[8] + ":" + stringArray[9]);
             }
 
 

@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -36,7 +37,7 @@ public class DBaccess extends AppCompatActivity {
         values.clear();
 
         // nameはいらないかも
-        values.put(UserColumns.NAME, "name");
+        //values.put(UserColumns.NAME, "name");
         values.put(UserColumns.ROOM, roomtest);
         values.put(UserColumns.DATETIME, getNowDate());
         resolver.update(uri, values, null, null);
@@ -54,15 +55,36 @@ public class DBaccess extends AppCompatActivity {
         @Override
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);
-            // 設定が変更された時の処理を書く
+            // 変更された時の処理を書く
             //changeact();
         }
     };
 
-    public void monitoring(ContentResolver resolver) {
+    // データベースを読む側で使うメソッド
+    public String[] monitoring(ContentResolver resolver) {
         contentResolver = resolver;
-        resolver.registerContentObserver(UserColumns.CONTENT_URI, true, mContentObserver);
+        //resolver.registerContentObserver(UserColumns.CONTENT_URI, true, mContentObserver);
+
+        // テーブルのデータを全件検索. 表示.
+        //final Cursor c = resolver.query(UserColumns.CONTENT_URI, null, null, null, null);
+
+        String[] dbstr = new String[4];
+
+        Uri uri = UserColumns.CONTENT_URI;
+        Cursor c = resolver.query(uri, null, null, null, null);
+        while (c.moveToNext()) {
+            //Log.d(TAG, "call:" + cursor.getString(cursor.getColumnIndexOrThrow("title")));
+            for (int i = 0; i < c.getColumnCount(); i++) {
+                dbstr[i] = c.getString(i);
+            }
+        }
+        // 処理が完了したらCursorを閉じます
+        c.close();
+
+        return dbstr;
+
     }
+
 
     public void changeact(){
         // DBの情報を取ってきてHolderにストックしておく
@@ -87,8 +109,9 @@ public class DBaccess extends AppCompatActivity {
             }
         }
         c.close();
-            DbinfoHolder holder = DbinfoHolder.getInstance();
-            holder.setdb(dbstr);
+        DbinfoHolder holder = DbinfoHolder.getInstance();
+        holder.setdb(dbstr);
+        //Log.d("DBupdata", dbstr[1] + " , " + dbstr[2] + " , " + dbstr[3]);
     }
 
     /*
