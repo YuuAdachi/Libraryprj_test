@@ -96,6 +96,7 @@ public class UserContentProvider extends ContentProvider {
         count = db.update(UserColumns.TABLE, values, selection, selectionArgs);
         // 通知機能
         getContext().getContentResolver().notifyChange(uri, null);
+        getContext().getContentResolver().notifyChange(uri, null);
         return count;
     }
 

@@ -10,7 +10,7 @@ public class DbinfoHolder {
     static DbinfoHolder _instance = null;
     //String test ="A";
 
-    String[] stringArray = new String[4];
+    String[] stringArray = new String[5];
 
     //Cursor c;
     /**

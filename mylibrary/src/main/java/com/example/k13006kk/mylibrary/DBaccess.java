@@ -29,7 +29,7 @@ public class DBaccess extends AppCompatActivity {
 
     }
 
-    public void dbaccess(ContentResolver resolver, String roomtest){
+    public void dbaccess(ContentResolver resolver, String[] roomtest){
 
         // テーブルにデータ投入.
         uri = ContentUris.withAppendedId(UserColumns.CONTENT_URI, 1);
@@ -38,7 +38,9 @@ public class DBaccess extends AppCompatActivity {
 
         // nameはいらないかも
         //values.put(UserColumns.NAME, "name");
-        values.put(UserColumns.ROOM, roomtest);
+        values.put(UserColumns.BUILDING_NAME, roomtest[0]);
+        values.put(UserColumns.ROOM_NAME, roomtest[1]);
+        values.put(UserColumns.ROOM_NUMBER, roomtest[2]);
         values.put(UserColumns.DATETIME, getNowDate());
         resolver.update(uri, values, null, null);
 
@@ -51,15 +53,6 @@ public class DBaccess extends AppCompatActivity {
         return df.format(date);
     }
 
-    ContentObserver mContentObserver = new ContentObserver(new Handler()) {
-        @Override
-        public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
-            // 変更された時の処理を書く
-            //changeact();
-        }
-    };
-
     // データベースを読む側で使うメソッド
     public String[] monitoring(ContentResolver resolver) {
         contentResolver = resolver;
@@ -68,7 +61,7 @@ public class DBaccess extends AppCompatActivity {
         // テーブルのデータを全件検索. 表示.
         //final Cursor c = resolver.query(UserColumns.CONTENT_URI, null, null, null, null);
 
-        String[] dbstr = new String[4];
+        String[] dbstr = new String[6];
 
         Uri uri = UserColumns.CONTENT_URI;
         Cursor c = resolver.query(uri, null, null, null, null);
@@ -92,7 +85,7 @@ public class DBaccess extends AppCompatActivity {
         // 現状ではID1のデータのみ取ってきている（DBには常に一つしかないため）
         uri = ContentUris.withAppendedId(UserColumns.CONTENT_URI, 1);
 
-        String[] dbstr = new String[4];
+        String[] dbstr = new String[5];
 
         // 取ってきたDB情報をそのままCursor型で保存
         //DbinfoHolder holder = DbinfoHolder.getInstance();

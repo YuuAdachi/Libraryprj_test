@@ -454,7 +454,7 @@ public class BeaconApplication{
                         }
 
                         if (!timersetcheck) {
-                            mcdt = new MyCountDownTimer(20000, 100);
+                            mcdt = new MyCountDownTimer(15000, 100);
                         }
 
                         // 直前に通知したものと同じならなにもしない
@@ -1055,8 +1055,8 @@ public class BeaconApplication{
         Log.d("SCANEVENT", "call");
         // Beacon情報を受け取るための配列
         final String[] beacon_info;
-        // 受け取ったBeacon情報とデータベースの情報をまとめるための配列
-        final String[] stringArray = new String[11];
+        // Beacon情報をもとに部屋情報を入れる配列
+        final String[] stringArray = new String[3];
 
         // DtaHolderクラスからBeacon情報を受け取る
         BeaconHolder holder = BeaconHolder.getInstance();
@@ -1088,6 +1088,10 @@ public class BeaconApplication{
                     System.out.println(json);
                     JSONObject jsonObject = new JSONObject(json);
 
+                    stringArray[0] = jsonObject.getString("building_name");
+                    stringArray[1] = jsonObject.getString("room_name");
+                    stringArray[2] = jsonObject.getString("roomnumber_no");
+
                     //Log.d("Server2",jsonObject.getString("room_number") + "," + jsonObject.getString("room_name"));
 
                     //Log.d("!!!!!!!",jsonObject.getString("room_number") + "," + jsonObject.getString("building_id") + "," + jsonObject.getString("building_name") + "," + jsonObject.getString("roomnumber_id") + "," + jsonObject.getString("roomnumber_no") + "," + jsonObject.getString("room_id") + "," + jsonObject.getString("beacon_identifier") + "," + jsonObject.getString("room_name"));
@@ -1104,6 +1108,7 @@ public class BeaconApplication{
                     //stringArray[5] = jsonObject.getString("beacon_identifier");
                     //stringArray[6] = jsonObject.getString("");
 
+                    /*
                     stringArray[0] = "A";
                     stringArray[1] = "B";
                     stringArray[2] = "C";
@@ -1117,10 +1122,11 @@ public class BeaconApplication{
                     stringArray[8] = beacon_info[1];
                     stringArray[9] = beacon_info[2];
                     stringArray[10] = beacon_info[3];
+                    */
                     // databaseクラスにBeacon情報とデータベースの情報を渡す
                     //beaconinfoHolder.setData(stringArray);
                     // データベース操作
-                    db.dbaccess(resolver1, stringArray[3]);
+                    db.dbaccess(resolver1, stringArray);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -1133,23 +1139,26 @@ public class BeaconApplication{
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
 
+                /*
                 stringArray[0] = "A";
                 stringArray[1] = "B";
                 stringArray[2] = "C";
+
                 stringArray[3] = "D";
                 stringArray[4] = "E";
                 stringArray[5] = "F";
                 stringArray[6] = "G";
+                */
 
-                stringArray[7] = beacon_info[0];
-                stringArray[8] = beacon_info[1];
-                stringArray[9] = beacon_info[2];
-                stringArray[10] = beacon_info[3];
+                stringArray[0] = beacon_info[0];
+                stringArray[1] = beacon_info[1];
+                stringArray[2] = beacon_info[2];
+                //stringArray[10] = beacon_info[3];
 
                 // databaseクラスにBeacon情報とデータベースの情報を渡す
                 //beaconinfoHolder.setData(stringArray);
-                db.dbaccess(resolver1, stringArray[8] + ":" + stringArray[9]);
-                Log.d("db", stringArray[8] + ":" + stringArray[9]);
+                db.dbaccess(resolver1, stringArray);
+                //Log.d("db", stringArray[8] + ":" + stringArray[9]);
             }
 
 

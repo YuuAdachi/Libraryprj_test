@@ -1,19 +1,26 @@
 package com.example.k13006kk.libraryprj_test;
 
 import android.content.Intent;
+import android.database.ContentObserver;
+import android.graphics.Color;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.k13006kk.mylibrary.BeaconinfoHolder;
+import com.example.k13006kk.mylibrary.UserColumns;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
 
     /*
@@ -27,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     BeaconinfoHolder beaconinfo = new BeaconinfoHolder();
     String[] stringArray;
     Handler _handler = new Handler();
+
+    TextView tv1, tv2, tv3, tv4, tv5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,86 +58,47 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    ContentObserver mContentObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            // 変更された時の処理を書く
+            tv5 = (TextView) findViewById(R.id.state);
+            tv5.setText("入室　");
+            tv5 = (TextView) findViewById(R.id.state);
+            // オレンジ色
+            tv5.setTextColor(0xffff8c00);
+        }
+    };
+
     public void beaconinfoView(){
 
             stringArray = beaconinfo.getData();
 
-            TextView tv = (TextView) findViewById(R.id.uuid);
-            tv.setText(stringArray[0]);
+            tv1 = (TextView) findViewById(R.id.uuid);
+            tv1.setText(stringArray[0]);
 
-            TextView tv2 = (TextView) findViewById(R.id.major);
+            tv2 = (TextView) findViewById(R.id.major);
             tv2.setText(stringArray[1]);
 
-            TextView tv3 = (TextView) findViewById(R.id.minor);
+            tv3 = (TextView) findViewById(R.id.minor);
             tv3.setText(stringArray[2]);
 
-            TextView tv4 = (TextView) findViewById(R.id.rssi);
+            tv4 = (TextView) findViewById(R.id.rssi);
             tv4.setText(stringArray[3]);
 
     }
 
-    public void onClick1(View view){
-
-        _handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                beaconinfoView();
-
-                _handler.postDelayed(this, 0);
-
-            }
-        }, 0);
-
-        //String[] stringArray;
-
-        //BeaconinfoHolder beaconinfo = new BeaconinfoHolder();
-
-
-        /*
-        mainActivity main = new mainActivity();
-
-        BeaconinfoHolder database = BeaconinfoHolder.getinstance();
-        */
-
-
-        //main.data_com(url);
-
-
-        /*
-        stringArray = beaconinfo.getData();
-
-        TextView tv = (TextView) findViewById(R.id.uuid);
-        tv.setText(stringArray[7]);
-
-        TextView tv2 = (TextView) findViewById(R.id.major);
-        tv2.setText(stringArray[8]);
-
-        TextView tv3 = (TextView) findViewById(R.id.minor);
-        tv3.setText(stringArray[9]);
-
-        TextView tv4 = (TextView) findViewById(R.id.rssi);
-        tv4.setText(stringArray[10]);
-
-        /*
-        System.out.println(stringArray[0]);
-        System.out.println(stringArray[1]);
-        System.out.println(stringArray[2]);
-        System.out.println(stringArray[3]);
-        System.out.println(stringArray[4]);
-        System.out.println(stringArray[5]);
-        System.out.println(stringArray[6]);
-        */
-
-        //Log.d("Server",stringArray[0] + "," + stringArray[1] + "," + stringArray[2] + "," + stringArray[3] + "," + stringArray[4] + "," + stringArray[5] + "," + stringArray[6]);
-        //Log.d("Server2",stringArray[6]);
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getContentResolver().registerContentObserver(UserColumns.CONTENT_URI,true,mContentObserver);
     }
 
-    public void onClick2(View view){
-        _handler.removeCallbacksAndMessages(null);
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getContentResolver().unregisterContentObserver(mContentObserver);
     }
-
-
 
 }

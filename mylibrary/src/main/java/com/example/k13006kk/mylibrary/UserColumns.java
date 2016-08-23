@@ -17,12 +17,17 @@ public class UserColumns implements BaseColumns {
     // レコード個別指定コンテントタイプ
     public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.dir/vnd.example.users";
 
+    // 0:キー番号 1:棟名 2:部屋名 3:部屋番号 4:日時
     // テーブル名
     public static final String TABLE = "userdata";
     // カラム 名前
     //public static final String NAME = "name";
-    // カラム 部屋
-    public static final String ROOM = "room";
+    // カラム 棟名
+    public static final String BUILDING_NAME = "building_name";
+    // カラム 部屋名
+    public static final String ROOM_NAME = "room_name";
+    // カラム 部屋番号
+    public static final String ROOM_NUMBER = "room_number";
     // カラム 日時
     public static final String DATETIME = "datetime";
 

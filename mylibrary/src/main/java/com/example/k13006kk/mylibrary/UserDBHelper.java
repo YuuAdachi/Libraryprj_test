@@ -24,14 +24,18 @@ public class UserDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("CREATE TABLE " + UserColumns.TABLE + " ("
                 + UserColumns._ID + " INTEGER PRIMARY KEY,"
                 //+ UserColumns.NAME + " TEXT,"
-                + UserColumns.ROOM + " TEXT,"
+                + UserColumns.BUILDING_NAME + " TEXT,"
+                + UserColumns.ROOM_NAME + " TEXT,"
+                + UserColumns.ROOM_NUMBER + " TEXT,"
                 + UserColumns.DATETIME + " TEXT"
                 + ");");
         // table row insert
         sqLiteDatabase.execSQL("insert into " + UserColumns.TABLE + "("
                 //+ UserColumns.NAME + ","
-                + UserColumns.ROOM + ","
-                + UserColumns.DATETIME + ") values ('NULL_ROOM', 'NULL_TIME');");
+                + UserColumns.BUILDING_NAME + ","
+                + UserColumns.ROOM_NAME + ","
+                + UserColumns.ROOM_NUMBER + ","
+                + UserColumns.DATETIME + ") values ('NULL_BUILDING', 'NULL_ROOMNAME', 'NULL_ROOMNUM', 'NULL_TIME');");
     }
 
     @Override
