@@ -59,202 +59,6 @@ import com.loopj.android.http.RequestParams;
 
 public class BeaconApplication{
 
-    //private ScanNotify sn = null;
-
-    String allbeaconinfo1 = "a";
-    String allbeaconinfo2 = "b";
-
-    //BeaconManager beaconManager;
-    //RegionBootstrap mRegionBootstrap;
-
-    /*
-    public void Beaconscanalt2(Context context, String url){
-
-        int i = 0;
-
-        //this.context = contexts;
-        List<Region> list = new ArrayList<>();
-
-        String beacon_uuid = null;
-
-        final String surl = url;
-
-        // iBeaconのデータを認識するためのParserフォーマット
-        final String IBEACON_FORMAT = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24";
-        beaconManager = BeaconManager.getInstanceForApplication(context);//abeaconManager;//
-        beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(IBEACON_FORMAT));
-        beaconManager.setForegroundBetweenScanPeriod(1000);
-        beaconManager.setBackgroundBetweenScanPeriod(1000);
-
-
-
-        Identifier identifier = null;
-        //UUIDの作成
-        try {
-            identifier = Identifier.parse(beacon_uuid.toUpperCase());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        //今回はmajor, minorの指定はしない
-        Region region = new Region("uuid-region-bootstrap" + i, identifier, null, null);
-
-        list.add(region);
-        i++;
-
-        //mRegionBootstrap = new RegionBootstrap(context, list);
-
-        beaconManager.setRangeNotifier(new RangeNotifier() {
-            @Override
-            public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
-
-                BeaconHolder holder = BeaconHolder.getInstance();
-                String[] beacon_info = new String[4];
-                // 検出したビーコンの情報を全部みる
-                double lastDistance = Double.MAX_VALUE;
-                Beacon nearBeacon = null;
-
-                for (Beacon beacon : beacons) {
-                    if (lastDistance > beacon.getDistance()) {
-                        nearBeacon = beacon;
-
-                        beacon_info[0] = beacon.getId1().toString();
-                        beacon_info[1] = beacon.getId2().toString();
-                        beacon_info[2] = beacon.getId3().toString();
-                        beacon_info[3] = "RSSI";
-                    }
-
-                    //Log.d(TAG, "UUID:" + beacon.getId1() + ", major:" + beacon.getId2() + ", minor:" + beacon.getId3() + ", Distance:" + beacon.getDistance() + ",RSSI" + beacon.getRssi() + ", TxPower" + beacon.getTxPower());
-                }
-
-                if (nearBeacon != null && matchBeacon(nearBeacon) == false) {
-                    //mLastBeacon = new Beacon.Builder().copyBeaconFields(nearBeacon).build();
-                    holder.setTestString(beacon_info);
-                    scanEvent(surl);
-                }
-            }
-        });
-    }
-
-    Beacon matchbeacon1 = null;
-    Beacon matchbeacon2 = null;
-
-    public boolean matchBeacon(Beacon nearBeacon){
-
-        boolean match = false;
-
-        matchbeacon2 = matchbeacon1;
-        matchbeacon1 = nearBeacon;
-
-        if(matchbeacon2 == matchbeacon1){
-            match = true;
-        }else if(matchbeacon2 != matchbeacon1){
-        }
-        return match;
-    }
-
-
-    public void Beaconscanalt1(Context context){
-
-        //this.context = context;
-
-        // iBeaconのデータを認識するためのParserフォーマット
-        final String IBEACON_FORMAT = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24";
-
-        // iBeaconのデータを受信できるようにParserを設定
-        beaconManager = BeaconManager.getInstanceForApplication(context);//beaconManager2;
-        beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(IBEACON_FORMAT));
-
-        //beaconManager.unbind(this);
-
-        //beaconManager.bind(this);
-
-    }
-
-    @Override
-    public void onBeaconServiceConnect() {
-        beaconManager.setRangeNotifier(new RangeNotifier() {
-            @Override
-            public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
-                // 検出したビーコンの情報を全部Logに書き出す
-                for (Beacon beacon : beacons) {
-                    Log.d("MyActivity", "UUID:" + beacon.getId1() + ", major:" + beacon.getId2() + ", minor:" + beacon.getId3() + ", Distance:" + beacon.getDistance());
-                }
-            }
-        });
-
-        try {
-            // 距離観測の開始
-            beaconManager.startRangingBeaconsInRegion(new Region("unique-ranging-region-id", null, null, null));
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    protected void onResume() {
-        super.onResume();
-        beaconManager.bind(this);
-    }
-
-    protected void onPause() {
-        beaconManager.unbind(this);
-        super.onPause();
-    }*/
-
-
-    /*
-    //@Override
-    public void BeaconScanalt(Context context,/* BeaconManager beaconManager2,/RegionBootstrap regionBootstrap2, String url) {
-        //super.onCreate();
-
-        final String surl = url;
-
-        // iBeaconのデータを認識するためのParserフォーマット
-        final String IBEACON_FORMAT = "m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24";
-
-        RegionBootstrap regionBootstrap;
-
-        // iBeacon領域
-        //Region region;
-
-        //this.context = context;
-
-        // iBeaconのデータを受信できるようにParserを設定
-        BeaconManager beaconManager = BeaconManager.getInstanceForApplication(context);//beaconManager2;
-        beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(IBEACON_FORMAT));
-        // Beaconをスキャンする間隔
-        beaconManager.setBackgroundBetweenScanPeriod(1000);
-
-        // UUID, major, minorの指定はしない
-        //region = new Region("uuid-region-bootstrap-001", null, null, null);
-        regionBootstrap = regionBootstrap2;
-
-
-        beaconManager.setRangeNotifier(new RangeNotifier() {
-            @Override
-            public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
-                // 検出したビーコンの情報を全部Logに書き出す
-                for(Beacon beacon : beacons) {
-
-                    BeaconHolder holder = BeaconHolder.getInstance();
-                    String[] beacon_info = new String[4];
-                    beacon_info[0] = beacon.getId1().toString();
-                    beacon_info[1] = beacon.getId2().toString();
-                    beacon_info[2] = beacon.getId3().toString();
-                    beacon_info[3] = "RSSI";
-                    holder.setTestString(beacon_info);
-
-                    scanEvent(surl);
-
-                    //Log.d("BeaconApplication", "UUID:" + beacon.getId1() + ", major:" + beacon.getId2() + ", minor:" + beacon.getId3() + ", Distance:" + beacon.getDistance() + ",RSSI" + beacon.getRssi() + ", TxPower" + beacon.getTxPower());
-
-                    //BeaconScan2(room_uuid);
-                }
-            }
-        });
-
-    }*/
     public String[] beforebeacon = {"A","A","A"};
 
     public static String surl;
@@ -262,6 +66,8 @@ public class BeaconApplication{
 
     // 同じbeaconが連続何回受信されたかカウントする変数（入室判定用）
     public int entercount = 1;
+    // しきい値を越えているかチェックするフラグ
+    public boolean threshold = false;
     // 入室通知を出したかチェックするフラグ
     public static boolean entercheck = false;
     // 入室判定が始まっているかチェックするフラグ
@@ -430,10 +236,14 @@ public class BeaconApplication{
 
                         //db.dbaccess(resolver1,roomtest);
 
-                        holder.setTestString(beacon_info2);
-
+                        if("A".equals(beacon_info2[1])) {
+                        }else{
+                            holder.setTestString(beacon_info2);
+                            //String[] beacon_info3 = holder.getTestString();
+                            //Log.d("scan2",beacon_info3[0]+","+beacon_info3[1]+","+beacon_info3[2]+","+beacon_info3[3]);
+                        }
                         // 画面表示用
-                        beaconlog();
+                        //beaconlog();
 
                         // 前回と同じものか判定
                         boolean[] check = new boolean[3];
@@ -463,8 +273,12 @@ public class BeaconApplication{
                         else {
                             // 前回と同じものなら
                             if (check[0] && check[1] && check[2]) {
-                                // タイマーがスタートしておらず　かつ　入室判定がされていなかったら
-                                if (!timercheck && !entercheck) {
+                                // 初めてしきい値を越えたら
+                                if(!threshold && Integer.parseInt(beacon_info2[3]) >= -82){
+                                    threshold = true;
+                                }
+                                // タイマーがスタートしておらず　かつ　入室判定がされていなかったら　かつしきい値を越えていたら
+                                if (!timercheck && !entercheck && threshold) {
                                     // タイマーがスタートしてなかったらタイマースタート
                                     mcdt.start();
                                     timersetcheck = true;
@@ -479,7 +293,8 @@ public class BeaconApplication{
                                     //enterbefore[i] = beacon_info2[i];
                                     //}
                                 }
-                            }// RSSIの閾値判定は初回のみ行う　RSSIが-82以上だったら
+                            }
+                            /*// RSSIの閾値判定は初回のみ行う　RSSIが-82以上だったら
                             else if(Integer.parseInt(beacon_info2[3]) >= -82){
                                 // 別のものが受信されればタイマー停止
                                 mcdt.cancel();
@@ -491,7 +306,7 @@ public class BeaconApplication{
                                 //scanEvent(surl, resolver1);
                                 // データベース操作
                                 //db.dbaccess(resolver1,roomtest);
-                            }
+                            }*/
                         }
                         //}
 
@@ -544,14 +359,14 @@ public class BeaconApplication{
         timer2.scheduleAtFixedRate(scanStop, scan2, scan1);
 
 
-        // beacon更新フラグを6.8秒毎にリセットする
+        // beacon更新フラグを10.0//6.8//秒毎にリセットする
         TimerTask flgreset = new TimerTask() {
             public void run() {
                 // リセット関数
                 updatecheck = bupdcheckset();
             }
         };
-        // beacon更新フラグを1周期＋スキャン1回毎にチェックして更新がないものを削除する
+        // beacon更新フラグを1周期//＋スキャン1回//毎にチェックして更新がないものを削除する
         TimerTask remove = new TimerTask() {
             public void run() {
                 // 削除関数
@@ -562,7 +377,7 @@ public class BeaconApplication{
         Timer timer3 = new Timer();
         Timer timer4 = new Timer();
         timer3.scheduleAtFixedRate(flgreset, 0, 2*(scan1+scan2));
-        timer4.scheduleAtFixedRate(remove, 0, scan1+2*(scan1+scan2));
+        timer4.scheduleAtFixedRate(remove, 0, (scan1+scan2));//1周期に変更 scan1+2*(scan1+scan2)
 
     }
 
@@ -655,7 +470,7 @@ public class BeaconApplication{
     // beaconの更新があったかをチェックする配列
     //boolean[] updatecheck = new boolean[10];
 
-    boolean beaconlistflg2 = false;
+    public static boolean beaconlistflg2 = false;
 
     public String[] beaconlistArray21(){
         String[] nbArray = {"A","A","A","A"};
@@ -1016,7 +831,7 @@ public class BeaconApplication{
 
         //Log.d("TIMEOUT", mcdtkey[0] + "," + mcdt[0].getCount() + ":" + mcdtkey[1] + "," + mcdt[1].getCount());
 
-        Log.d("scan2",finalbeacon[0]+","+finalbeacon[1]+","+finalbeacon[2]+","+finalbeacon[3]);
+        //Log.d("scan2",finalbeacon[0]+","+finalbeacon[1]+","+finalbeacon[2]+","+finalbeacon[3]);
 
         return finalbeacon;
     }
@@ -1092,39 +907,6 @@ public class BeaconApplication{
                     stringArray[1] = jsonObject.getString("room_name");
                     stringArray[2] = jsonObject.getString("roomnumber_no");
 
-                    //Log.d("Server2",jsonObject.getString("room_number") + "," + jsonObject.getString("room_name"));
-
-                    //Log.d("!!!!!!!",jsonObject.getString("room_number") + "," + jsonObject.getString("building_id") + "," + jsonObject.getString("building_name") + "," + jsonObject.getString("roomnumber_id") + "," + jsonObject.getString("roomnumber_no") + "," + jsonObject.getString("room_id") + "," + jsonObject.getString("beacon_identifier") + "," + jsonObject.getString("room_name"));
-
-                    //String[] stringArray2 = new String[7];
-
-                    //Log.d("Server2",jsonObject.getString("room_number"));
-
-                    //stringArray[0] = jsonObject.getString("building_id");
-                    //stringArray[1] = jsonObject.getString("building_name");////////////////
-                    //stringArray[2] = jsonObject.getString("roomnumber_id");
-                    //stringArray[3] = jsonObject.getString("roomnumber_no");/////////////// room_name////
-                    //stringArray[4] = jsonObject.getString("room_id");
-                    //stringArray[5] = jsonObject.getString("beacon_identifier");
-                    //stringArray[6] = jsonObject.getString("");
-
-                    /*
-                    stringArray[0] = "A";
-                    stringArray[1] = "B";
-                    stringArray[2] = "C";
-                    stringArray[3] = "D";
-                    //stringArray[3] = jsonObject.getString("roomnumber_no");
-                    stringArray[4] = "E";
-                    stringArray[5] = "F";
-                    stringArray[6] = "G";
-
-                    stringArray[7] = beacon_info[0];
-                    stringArray[8] = beacon_info[1];
-                    stringArray[9] = beacon_info[2];
-                    stringArray[10] = beacon_info[3];
-                    */
-                    // databaseクラスにBeacon情報とデータベースの情報を渡す
-                    //beaconinfoHolder.setData(stringArray);
                     // データベース操作
                     db.dbaccess(resolver1, stringArray);
 
@@ -1138,17 +920,6 @@ public class BeaconApplication{
             // 通信失敗したときの処理
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-
-                /*
-                stringArray[0] = "A";
-                stringArray[1] = "B";
-                stringArray[2] = "C";
-
-                stringArray[3] = "D";
-                stringArray[4] = "E";
-                stringArray[5] = "F";
-                stringArray[6] = "G";
-                */
 
                 stringArray[0] = beacon_info[0];
                 stringArray[1] = beacon_info[1];

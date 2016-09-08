@@ -56,7 +56,7 @@ public class UserContentProvider extends ContentProvider {
         SQLiteDatabase db = mDBHelper.getReadableDatabase();
         Cursor cursor = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
         //通知機能
-        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        //cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
 
@@ -80,7 +80,7 @@ public class UserContentProvider extends ContentProvider {
         long rowId = db.insert(insertTable, null, values);
         if (rowId > 0) {
             Uri returnUri = ContentUris.withAppendedId(contentUri, rowId);
-            getContext().getContentResolver().notifyChange(returnUri, null);
+            //getContext().getContentResolver().notifyChange(returnUri, null);
             return returnUri;
         } else {
             throw new IllegalArgumentException("Failed to insert row into " + uri);
@@ -113,7 +113,7 @@ public class UserContentProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
-        getContext().getContentResolver().notifyChange(uri, null);
+        //getContext().getContentResolver().notifyChange(uri, null);
         return count;
     }
 

@@ -40,7 +40,7 @@ public class Background  extends Service/* implements BootstrapNotifier */{
 
     //BeaconApplication beaconApplication = new BeaconApplication();
 
-    String url = "http://192.168.100.211/beacon_load.php";
+    String url = "http://192.168.54.167:60000/beacon_load.php";//http://192.168.100.211/beacon_load.php
 
 
 
@@ -60,8 +60,8 @@ public class Background  extends Service/* implements BootstrapNotifier */{
 
         final BluetoothManager bluetoothManager2 = (BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);
 
-        int scan1 = 2600;//基本は4.6秒間隔
-        int scan2 = 800;//基本は0.4秒間スキャン
+        int scan1 = 3000;//基本は4.6秒間隔//2600
+        int scan2 = 2000;//基本は0.4秒間スキャン//800
 
         beaconApplication.BeaconScan(resolver, bluetoothManager2, scan1,scan2,url);
         //dBaccess.monitoring(resolver);
