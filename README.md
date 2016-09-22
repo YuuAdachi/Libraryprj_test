@@ -4,4 +4,4 @@
   
 ***  
 ## 受信開始  
-`beaconApplication.BeaconScan(resolver, bluetoothManager2, scan1,scan2,url);`  
+**`beaconApplication.BeaconScan(resolver, bluetoothManager2, scan1,scan2,url);`**  
