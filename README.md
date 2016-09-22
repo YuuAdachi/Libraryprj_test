@@ -1,6 +1,2 @@
-# Libraryprj_test
-
-//ライブラリを使用するには
-//Android 5.0以上でお願いします
-aaaaa
-aaaaa
+# Libraryprj_test  
+ライブラリを使用するにはAndroid 5.0以上でお願いします
