@@ -4,4 +4,4 @@
   
 ***  
 ## 受信開始  
-`$hoge = 1`  
+`beaconApplication.BeaconScan(resolver, bluetoothManager2, scan1,scan2,url);`  
