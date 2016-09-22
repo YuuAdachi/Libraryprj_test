@@ -7,6 +7,6 @@
 **`beaconApplication.BeaconScan(resolver, bluetoothManager2, scan1,scan2,url);`**  
   
 ・scan1  
-    受信間隔です。ミリ秒で指定してください。  
-・scan2
-    受信時間です。ミリ秒で指定してください。  
+　　受信間隔です。ミリ秒で指定してください。  
+・scan2  
+　　受信時間です。ミリ秒で指定してください。  
