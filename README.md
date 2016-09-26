@@ -38,14 +38,12 @@ BLEビーコンをスキャンして部屋認識をするライブラリです�
 ***  
 ## ビーコン情報の取得  
 *ビーコン情報取得コード*  
-
-*  
+  
     BeaconHolder beaconinfo = BeaconHolder.getInstance();
     for (int i = 0; i < beaconinfo.getTestString().length; i++) {
         stringArray[i] = beaconinfo.getTestString()[i];
     }
-*  
-
+  
 [0] はUUID、[1]はmajor、[2]はminor、[3]はrssi　です  
 
 ***  
