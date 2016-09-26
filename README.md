@@ -2,7 +2,7 @@
   
 BLEビーコンをスキャンして部屋認識をするライブラリです。  
 利用できる機能は以下です。  
-　・ビーコンのスキャン（バックグラウンド動作可能）  
+　・ビーコンのスキャン（バックグラウンド動作）  
 　・スキャンしているビーコンの情報（UUID,major,minor等）の取得  
 　・入室判定（ビーコンスキャンで自動で行われます）  
 　・このライブラリを使用したアプリで部屋情報の共有  
@@ -13,11 +13,17 @@ BLEビーコンをスキャンして部屋認識をするライブラリです�
   
 ***  
 ## ビーコンのスキャン  
-バックグラウンド動作可能です。  
+バックグラウンドで動作させてください。  
   
 *受信開始コード*  
-**`beaconApplication.BeaconScan(resolver, bluetoothManager2, scan1,scan2,url);`**  
+**`beaconApplication.BeaconScan(resolver, bluetoothManager, scan1,scan2,url);`**  
   
+・resolver  
+　　`ContentResolver resolver = getContentResolver();`  
+　　としておいてください。  
+・bluetoothManager  
+　　`BluetoothManager bluetoothManager = (BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);`  
+　　としておいてください。  
 ・scan1  
 　　受信間隔です。ミリ秒で指定してください。  
 ・scan2  
