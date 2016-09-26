@@ -10,8 +10,8 @@ BLEビーコンをスキャンして部屋認識をするライブラリです�
 ! ライブラリを使用するには**Android 5.0**以上でお願いします。  
 ! クラス名、関数名は変更予定です。  
   
-***  
-## 受信開始  
+  
+## ビーコンのスキャン  
 **`beaconApplication.BeaconScan(resolver, bluetoothManager2, scan1,scan2,url);`**  
   
 ・scan1  
