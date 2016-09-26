@@ -11,6 +11,7 @@ BLEビーコンをスキャンして部屋認識をするライブラリです�
 ! クラス名、関数名は変更予定です。  
   
   
+  
 ## ビーコンのスキャン  
 **`beaconApplication.BeaconScan(resolver, bluetoothManager2, scan1,scan2,url);`**  
   
