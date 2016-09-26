@@ -37,6 +37,7 @@ BLEビーコンをスキャンして部屋認識をするライブラリです�
   
 ***  
 ## ビーコン情報の取得  
+  `    BeaconHolder beaconinfo = BeaconHolder.getInstance();`  
   
 ***  
 ## 部屋情報の取得  
