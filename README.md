@@ -16,7 +16,7 @@ BLEビーコンをスキャンして部屋認識をするライブラリです�
 バックグラウンド動作可能です。  
   
 *受信開始コード  
-**`beaconApplication.BeaconScan(resolver, bluetoothManager2, scan1,scan2,url);`**  
+`beaconApplication.BeaconScan(resolver, bluetoothManager2, scan1,scan2,url);`  
   
 ・scan1  
 　　受信間隔です。ミリ秒で指定してください。  
