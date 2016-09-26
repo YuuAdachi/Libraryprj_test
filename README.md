@@ -18,19 +18,19 @@ BLEビーコンをスキャンして部屋認識をするライブラリです�
 *受信開始コード*  
 **`beaconApplication.BeaconScan(resolver, bluetoothManager, scan1,scan2,url);`**  
   
-・resolver  
+・`resolver`  
 　　`ContentResolver resolver = getContentResolver();`  
 　　としておいてください。  
-・bluetoothManager  
+・`bluetoothManager`  
 　　`BluetoothManager bluetoothManager = (BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);`  
 　　としておいてください。  
-・scan1  
+・`scan1`  
 　　受信間隔です。ミリ秒で指定してください。  
-・scan2  
+・`scan2`  
 　　受信時間です。ミリ秒で指定してください。  
 　 （推奨はscan1=3000, scan2=2000ですが決まりは無いです。）  
-・url  
+・`url`  
 　　部屋情報データベスへのアドレスです。  
 　　研究室内からは　`http://192.168.100.211/beacon_load.php`  
-　　愛工大内のwi-fiからは　`http://192.168.54.167:60000/beacon_load.php`  
+　　愛工大内のwifiからは　`http://192.168.54.167:60000/beacon_load.php`  
   
