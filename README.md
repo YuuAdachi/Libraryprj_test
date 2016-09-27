@@ -1,5 +1,6 @@
-# Libraryprj_test
+# BeaconRR.jar
   
+*Beacon-Room-Recognition*の略です。  
 BLEビーコンをスキャンして部屋認識をするライブラリです。  
 利用できる機能は以下です。  
 　・ビーコンのスキャン（バックグラウンド動作）  
