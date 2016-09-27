@@ -55,5 +55,20 @@ BLEビーコンをスキャンして部屋認識をするライブラリです�
     ContentResolver resolver = getContentResolver();
     stringArray = dBaccess.monitoring(resolver);
 ### (2)データベースの変更を監視  
+*データベース変更監視コード*  
+
+    ContentObserver mContentObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            // 変更された時の処理を書く
+        }
+    };
+
 ***  
 ## その他  
+###改善、変更予定  
+・クラス、関数名の変更  
+・入室判定関連はこれでいいのか  
+・退室判定をどうするか  
+・データベース監視をバックグラウンドで行う方法  
