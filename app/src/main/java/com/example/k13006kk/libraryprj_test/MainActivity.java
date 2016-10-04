@@ -2,24 +2,14 @@ package com.example.k13006kk.libraryprj_test;
 
 import android.content.Intent;
 import android.database.ContentObserver;
-import android.graphics.Color;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.k13006kk.mylibrary.BeaconHolder;
-import com.example.k13006kk.mylibrary.BeaconinfoHolder;
 import com.example.k13006kk.mylibrary.UserColumns;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends Activity {
 

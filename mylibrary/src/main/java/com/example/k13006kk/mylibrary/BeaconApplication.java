@@ -4,52 +4,17 @@ package com.example.k13006kk.mylibrary;
  * Created by k13006kk on 2016/02/22.
  */
 
-import android.app.Activity;
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
-import android.database.ContentObserver;
-import android.net.Uri;
-import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-/*
-compile 'org.altbeacon:android-beacon-library:2+@aar'
-
-import org.altbeacon.beacon.Beacon;
-import org.altbeacon.beacon.BeaconConsumer;
-import org.altbeacon.beacon.BeaconManager;
-import org.altbeacon.beacon.BeaconParser;
-import org.altbeacon.beacon.Identifier;
-import org.altbeacon.beacon.MonitorNotifier;
-import org.altbeacon.beacon.RangeNotifier;
-import org.altbeacon.beacon.Region;
-import org.altbeacon.beacon.startup.BootstrapNotifier;
-import org.altbeacon.beacon.startup.RegionBootstrap;
-*/
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URI;
-import java.nio.ByteBuffer;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -203,19 +168,6 @@ public class BeaconApplication{
                         String major = String.valueOf(Integer.parseInt(IntToHex2(scanRecord[25] & 0xff) + IntToHex2(scanRecord[26] & 0xff), 16));
                         String minor = String.valueOf(Integer.parseInt(IntToHex2(scanRecord[27] & 0xff) + IntToHex2(scanRecord[28] & 0xff), 16));
 
-                        /*
-                        byte[] by1 = new byte[2];
-                        byte[] by2 = new byte[2];
-
-                        by1[0] = scanRecord[25];
-                        by1[1] = scanRecord[26];
-                        by2[0] = scanRecord[27];
-                        by2[1] = scanRecord[28];
-
-                        String major = IntToHex3(by1);
-                        String minor = IntToHex3(by2);
-                        */
-
                         String scan_rssi = String.valueOf(rssi);
 
                         String[] beacon_info = new String[4];
@@ -228,22 +180,12 @@ public class BeaconApplication{
                         beacon_info[3] = scan_rssi;
 
                         // 最も強いbeacon情報を取得
-                        String[] beacon_info2 = beaconlist2(beacon_info);
-
-                        //String roomtest = beacon_info2[1] + ":" + beacon_info2[2];
-
-                        // 最終的にここはDBに通知するプログラムになる
-
-                        //db.dbaccess(resolver1,roomtest);
+                        String[] beacon_info2 = strongIdentify(beacon_info);
 
                         if("A".equals(beacon_info2[1])) {
                         }else{
                             holder.setTestString(beacon_info2);
-                            //String[] beacon_info3 = holder.getTestString();
-                            //Log.d("scan2",beacon_info3[0]+","+beacon_info3[1]+","+beacon_info3[2]+","+beacon_info3[3]);
                         }
-                        // 画面表示用
-                        //beaconlog();
 
                         // 前回と同じものか判定
                         boolean[] check = new boolean[3];
@@ -252,8 +194,6 @@ public class BeaconApplication{
                                 check[i] = true;
                             }
                         }
-
-                        //scanEvent(surl);
 
                         // 通知したものと同じものか判定
                         boolean[] notifycheck = new boolean[3];
@@ -294,21 +234,7 @@ public class BeaconApplication{
                                     //}
                                 }
                             }
-                            /*// RSSIの閾値判定は初回のみ行う　RSSIが-82以上だったら
-                            else if(Integer.parseInt(beacon_info2[3]) >= -82){
-                                // 別のものが受信されればタイマー停止
-                                mcdt.cancel();
-                                timersetcheck = false;
-                                timercheck = false;
-                                // 入室判定をfalseに
-                                entercheck = false;
-                                // 通信処理
-                                //scanEvent(surl, resolver1);
-                                // データベース操作
-                                //db.dbaccess(resolver1,roomtest);
-                            }*/
                         }
-                        //}
 
                         beforebeacon = beacon_info2;
                         Log.d("Beacon", "UUID:" + uuid + ", major:" + major + ", minor:" + minor + ", RSSI:" + scan_rssi);
@@ -383,93 +309,6 @@ public class BeaconApplication{
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /*
-    public String[] nearbeacon = new String[4];
-    public String[][] beaconlist = new String[20][4];
-    boolean beaconlistflg = false;
-
-    public String[] beaconlistArray1(){
-        String[] nbArray = {"A","A","A","-500"};
-        return nbArray;
-    }
-
-    public String[][] beaconlistArray2(){
-        String[][] sArray = new String[20][4];
-        for( int i = 0; i < 20; i++){
-            for( int j = 0; j < 4; j++){
-                sArray[i][j] = "-500";
-            }
-        }
-        return sArray;
-    }
-
-    // 送られてきたBeacon情報を常に20個保持しRSSIが最も大きいものを返す関数
-    public String[] beaconlist(String[] beacon_info){
-
-        //初回のみ配列を用意する
-        if(beaconlistflg == false){
-            nearbeacon = beaconlistArray1();
-            beaconlist = beaconlistArray2();
-            beaconlistflg = true;
-        }else{
-        }
-        // 一番古いものは破棄する
-        //beaconlist[19] = null;
-        // 常に20個の情報を保持する
-        // ビーコンが見つかるたびに19個目までは情報を一つずつ繰り上げる
-        for( int i = 0; i < 19; i++){
-            for( int j = 0; j < 4; j++){
-                beaconlist[i][j] = beaconlist[i+1][j];
-            }
-        }
-        // 20個目に最新の情報を入れる
-        for( int k = 0; k < 4; k++){
-            beaconlist[19][k] = beacon_info[k];
-        }
-        // 保持している20個の中にnearbeaconと一致するものが無ければリセットしてRSSIが最も大きいものを探す
-        // 指定したRSSI値より小さければ通知せずに探索し直し
-        do {
-            for (int n = 0; n < 20; n++) {
-                if (nearbeacon != beaconlist[n]) {
-                    nearbeacon[3] = "-500";
-                    for (int l = 0; l < 20; l++) {
-                        if (Integer.parseInt(nearbeacon[3]) <= Integer.parseInt(beaconlist[l][3])) {
-                            for (int m = 0; m < 4; m++) {
-                                nearbeacon[m] = beaconlist[l][m];
-                            }
-                        } else {
-                        }
-                    }
-                }
-            }
-        }while (Integer.parseInt(nearbeacon[3]) < -100);
-
-        // 最も近い(であろう)Beacon情報を返す
-        return nearbeacon;
-    }*/
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /*
-    // UUID,major,minor,RSSIの4つの情報を入れる
-    public String[] nearbeacon2 = new String[4];
-    // 10個のBeacon(さらにそれぞれを10個、４つの情報を持つ)を監視する
-    public String[][][] beaconlist2 = new String[10][10][4];
-    // ソート用配列
-    public String[][][] sortbeacon = new String[10][10][4];
-    // CountDownの初期値 10秒を1秒毎にカウント
-    /*
-    public MyCountDownTimer[] mcdt = new MyCountDownTimer[10];
-    boolean[] mcdtcheck = new boolean[10];
-    // mcdtのキー用配列　　　　　　　　　　　　必要ないかも
-    int[] mcdtkey = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-    int timeoutbeacon;
-    long tobtime;
-    static boolean mcdtfinish = false;*/
-
-    // beaconの更新があったかをチェックする配列
-    //boolean[] updatecheck = new boolean[10];
-
     public static boolean beaconlistflg2 = false;
 
     public String[] beaconlistArray21(){
@@ -489,71 +328,8 @@ public class BeaconApplication{
         return sArray;
     }
 
-    /*
-    public boolean[] bupdcheckset(){
-        boolean[] bupdcheck = new boolean[10];
-        for(int i = 0; i < 10; i++){
-            bupdcheck[i] = false;
-        }
-        return bupdcheck;
-    }*/
-    /*
-    // 10個のタイマーの初期化
-    public MyCountDownTimer[] countdowntimerset(){
-
-        final MyCountDownTimer[] cdt = new MyCountDownTimer[10];
-        for(int i = 0; i < 10; i++){
-            cdt[i] = new MyCountDownTimer(10000, 100);
-        }
-
-        return cdt;
-    }
-    // それぞれのタイマーが起動しているかのチェック用
-    public boolean[] countdowntimercheckset(){
-
-        boolean[] cdtcheck = new boolean[10];
-        for(int i = 0; i < 10; i++){
-            cdtcheck[i] = false;
-        }
-
-        return cdtcheck;
-    }*/
-
-
-    /*
-    // カウントダウンの残り時間（初期値）
-    private static long countMillis = 10000;
-    // カウントダウンタイマー
-    static class MyCountDownTimer extends CountDownTimer {
-
-        public MyCountDownTimer(long millisInFuture, long countDownInterval) {
-            super(millisInFuture, countDownInterval);
-        }
-
-        // キーを渡す//////////////////////////////////////////////////////////////////////////////////
-        @Override
-        public void onFinish() {
-            // カウントダウン完了後に呼ばれる
-            mcdtfinish = true;
-        }
-
-        @Override
-        public void onTick(long millisUntilFinished) {
-            // インターバル(countDownInterval)毎に呼ばれる
-            // 残り時間をcountMillisに代入
-            countMillis = millisUntilFinished;
-        }
-
-        //残り時間を返す。
-        public final Long getCount()
-        {
-            return countMillis;
-        }
-    }*/
-
-
-    // 送られてきたBeacon情報から部屋認識をする関数
-    public String[] beaconlist2(String[] newbeaconinfo){
+    // 送られてきたBeacon情報から最も強いビーコンを特定して返す関数
+    public String[] strongIdentify(String[] newbeaconinfo){
 
         // String[4] newbeaconinfo          :受信したiBeacon情報が入っている仮引数。中身はUUID,major,minor,RSSI
         // String[4] nearbeacon2            :newbeaconinfoが入る配列。初回のみbeaconlistArray21()で中身がA,A,A,Aに初期化される
@@ -576,52 +352,6 @@ public class BeaconApplication{
         }else{
         }
         sortbeacon = beaconlistArray22();
-
-        //updatecheck = bupdcheckset();
-
-        /*
-        // 残り時間が少ないものをキープ
-        timeoutbeacon = -2;
-        tobtime = 20000;
-        for(int i = 0; i < 10; i++){
-            if(mcdtcheck[i]){
-                if(tobtime > mcdt[i].getCount()){
-                    timeoutbeacon = i;
-                    tobtime = mcdt[i].getCount();
-                }
-            }
-        }
-        //Log.d("TIMEOUT", timeoutbeacon + ":" + tobtime);
-        // 10秒たったものを削除
-        if(mcdtfinish){
-            for( int i = 0; i < 10; i++){
-                for( int j = 0; j < 4; j++){
-                    beaconlist2[timeoutbeacon][i][j] = "A";
-                }
-            }
-            mcdt[timeoutbeacon].cancel();
-            mcdtcheck[timeoutbeacon] = false;
-            mcdtkey[timeoutbeacon] = -1;
-            mcdt[timeoutbeacon] = null;
-            mcdtfinish = false;
-        }*/
-
-
-        // RSSIをいったんカットする
-        // それぞれRSSI以外の情報が入る
-        /*
-        String[] newbeaconinfo2 = new String[3];
-        String[][][] beaconlist22 = new String[10][10][3];
-        for( int i = 0; i < 3; i++){
-            newbeaconinfo2[i] = newbeaconinfo[i];
-        }
-        for( int i = 0; i < 10; i++){
-            for( int j = 0; j < 10; j++){
-                for( int k = 0; k < 3; k++){
-                    beaconlist22[i][j][k] = beaconlist2[i][j][k];
-                }
-            }
-        }*/
 
         // UUID,major,minorの一致を真偽で管理する配列
         boolean[] check = new boolean[3];
@@ -650,17 +380,6 @@ public class BeaconApplication{
                 if(!updatecheck[i]){
                     updatecheck[i] = true;
                 }
-                /*
-                // 更新があればカウントリセット　初回のみカウントスタートだけ
-                mcdt[i].cancel();
-                mcdtcheck[i] = false;
-                mcdtkey[i] = -1;
-                mcdt[i] = null;
-                // キャンセルしたらインスタンス再生成
-                mcdt[i] = new MyCountDownTimer(10000, 100);
-                mcdt[i].start();
-                mcdtcheck[i] = true;
-                mcdtkey[i] = i;*/
                 break;
             }
         }
@@ -683,10 +402,7 @@ public class BeaconApplication{
                     // "A"が含まれている(＝データが入ってない)場合は何もしない
                     // データが入っている場合のみカウントする(lengthは0~10)
                     length++;
-                }/*else{
-                    // データが入っている場合のみカウントする(lengthは0~10)
-                    length++;
-                }*/
+                }
             }
             // RSSI値で降順ソート [10-length]
             if(!"A".equals(sortbeacon[i][9][0])){
@@ -750,23 +466,11 @@ public class BeaconApplication{
                 }
                 // 空の最終判定用配列のうち最も若いものにnewbeaconinfoを入れる
                 returnbeacon[emparray] = newbeaconinfo;
-                /*
-                // タイマースタート
-                mcdt[emparray] = new MyCountDownTimer(10000, 100);
-                mcdt[emparray].start();
-                mcdtcheck[emparray] = true;
-                mcdtkey[emparray] = emparray;*/
                 //Log.d("scan2",emparray + ":" + returnbeacon[emparray][1] + "," + returnbeacon[emparray][2]);
             }
             // もし10個の配列すべてに既に情報が入っていて、newbeaconinfoのRSSIがoldbeaconのものより大きければ
             // それに対応するbeaconlist2の中身をすべて空("A")にしてそこの９個目の配列にnewbeaconinfoを入れる
             else if(Integer.parseInt(oldbeacon[3]) < Integer.parseInt(newbeaconinfo[3])){
-                /*
-                // 対応するタイマーを一度キャンセル
-                mcdt[oldarray].cancel();
-                mcdtcheck[oldarray] = false;
-                mcdtkey[oldarray] = -1;
-                mcdt[oldarray] = null;*/
                 for( int i = 0; i < 10; i++){
                     for( int j = 0; j < 4; j++){
                         beaconlist2[oldarray][i][j] = "A";
@@ -776,38 +480,10 @@ public class BeaconApplication{
                 if(!updatecheck[oldarray]){
                     updatecheck[oldarray] = true;
                 }
-                /*
-                // タイマースタート
-                mcdt[oldarray] = new MyCountDownTimer(10000, 100);
-                mcdt[oldarray].start();
-                mcdtcheck[oldarray] = true;
-                mcdtkey[oldarray] = oldarray;*/
-
-                //mcdt[oldarray].getCount();
-                /*
-                for( int i = 0; i < 10; i++){
-                    for( int j = 0; j < 3; j++){
-                        check3[j] = beaconlist2[i][9][j].equals(oldbeacon[j]);
-                    }
-                    // UUID,major,minorがすべて一致しているもの(checkが全てtrue)のみ以下のif処理を行う
-                    if(check3[0] && check3[1] && check3[2]){
-                        // 9個目まで空("A")にする
-                        for( int k = 0; k < 9; k++){
-                            for( int l = 0; l < 4; l++){
-                                beaconlist2[i][k][l] = "A";
-                            }
-                        }
-                        // 10個目に新しく追加
-                        beaconlist2[i][9] = newbeaconinfo;
-                        break;
-                    }else{
-                    }
-                }*/
                 // 最もRSSIが弱いものが入っていた最終判定用配列を上書き
                 returnbeacon[oldarray] = newbeaconinfo;
                 //Log.d("scan2",oldarray + ":" + returnbeacon[oldarray][1] + "," + returnbeacon[oldarray][2]);
             }
-
         }
 
         // ここで初めて返すべき情報が出揃う
@@ -821,45 +497,9 @@ public class BeaconApplication{
                 finalbeacon = returnbeacon[i];
             }
         }
-
-        /*
-        for(int i = 0; i < 10; i++){
-            for(int j = 0; j < 4; j++) {
-                returnbeacon[i][j] = "A";
-            }
-        }*/
-
-        //Log.d("TIMEOUT", mcdtkey[0] + "," + mcdt[0].getCount() + ":" + mcdtkey[1] + "," + mcdt[1].getCount());
-
-        //Log.d("scan2",finalbeacon[0]+","+finalbeacon[1]+","+finalbeacon[2]+","+finalbeacon[3]);
-
         return finalbeacon;
     }
 
-/*
-    // カウントダウンの残り時間（初期値）
-    private static long countMillis = 10000;
-    // カウントダウンタイマー
-    class MyCountDownTimer extends CountDownTimer {
-
-        public MyCountDownTimer(long millisInFuture, long countDownInterval) {
-            super(millisInFuture, countDownInterval);
-
-        }
-
-        // キーを渡す//////////////////////////////////////////////////////////////////////////////////
-        @Override
-        public void onFinish() {
-            // カウントダウン完了後に呼ばれる
-        }
-
-        @Override
-        public void onTick(long millisUntilFinished) {
-            // インターバル(countDownInterval)毎に呼ばれる
-            // 残り時間をcountMillisに代入
-            countMillis = millisUntilFinished;
-        }
-    }*/
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void scanEvent(String url, ContentResolver resolver){
@@ -890,8 +530,6 @@ public class BeaconApplication{
 
         // サーバと通信
         client.get(server_url, params, new AsyncHttpResponseHandler() {
-
-            BeaconinfoHolder beaconinfoHolder = BeaconinfoHolder.getinstance();
 
             // 通信成功したときの処理
             @Override
@@ -927,7 +565,6 @@ public class BeaconApplication{
                 //stringArray[10] = beacon_info[3];
 
                 // databaseクラスにBeacon情報とデータベースの情報を渡す
-                //beaconinfoHolder.setData(stringArray);
                 db.dbaccess(resolver1, stringArray);
                 //Log.d("db", stringArray[8] + ":" + stringArray[9]);
             }
@@ -935,18 +572,6 @@ public class BeaconApplication{
 
         });
 
-    }
-
-    // 確認用に画面に表示するための関数
-    public void beaconlog(){
-        // Beacon情報を受け取るための配列
-        final String[] beacon_info;
-        // DtaHolderクラスからBeacon情報を受け取る
-        BeaconHolder holder = BeaconHolder.getInstance();
-        beacon_info = holder.getTestString();
-        // databaseクラスにBeacon情報とデータベースの情報を渡す
-        BeaconinfoHolder beaconinfoHolder = BeaconinfoHolder.getinstance();
-        beaconinfoHolder.setData(beacon_info);
     }
 
 }

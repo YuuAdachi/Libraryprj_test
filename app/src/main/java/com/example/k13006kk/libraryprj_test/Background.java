@@ -9,14 +9,18 @@ import android.bluetooth.BluetoothManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.example.k13006kk.mylibrary.BeaconApplication;
 import com.example.k13006kk.mylibrary.DBaccess;
+import com.example.k13006kk.mylibrary.UserColumns;
 
 /*
 import org.altbeacon.beacon.BeaconManager;
@@ -42,7 +46,13 @@ public class Background  extends Service/* implements BootstrapNotifier */{
 
     String url = "http://192.168.54.167:60000/beacon_load.php";//http://192.168.100.211/beacon_load.php
 
-
+    ContentObserver mContentObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            // 変更された時の処理を書く
+        }
+    };
 
     @Override
     public void onCreate() {
@@ -72,6 +82,8 @@ public class Background  extends Service/* implements BootstrapNotifier */{
 
         //beaconApplication.Beaconscanalt1(context);
         //beaconApplication.onBeaconServiceConnect();
+
+        //getContentResolver().registerContentObserver(UserColumns.CONTENT_URI,true,mContentObserver);
 
     }
 
