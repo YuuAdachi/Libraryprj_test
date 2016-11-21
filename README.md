@@ -71,6 +71,8 @@ BLEビーコンをスキャンして部屋認識をするライブラリです�
     ContentResolver resolver = getContentResolver();
     // 入室した部屋情報の取得
     for (int i = 0; i < dBaccess.getenterroom(resolver).length; i++) {
+        enterroom[i] = dBaccess.getenterroom(resolver)[i];
+    }
   
 
 ### (2)データベースの変更を監視  
