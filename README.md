@@ -76,7 +76,7 @@ BLEビーコンをスキャンして部屋認識をするライブラリです�
 ### (2)データベースの変更を監視  
 *データベース変更監視コード*  
 
-    ContentObserver mContentObserver = new ContentObserver(new Handler()) {
+    ContentObserver mContentObserver = new ContentObserver(new Handler()) {
         @Override
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);
