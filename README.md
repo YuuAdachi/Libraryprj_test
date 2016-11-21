@@ -20,7 +20,7 @@ BLEビーコンをスキャンして部屋認識をするライブラリです�
 .jarファイルを使用した受信専用アプリとサンプルアプリにはまだ反映していないので  
 動作確認は本テストアプリで行ってください。  
 またビーコンが発見できなくなる状況の対応がまだできていないので、退室判定の確認  
-をする際はビーコンをふ２つ以上用意して行ってください。  
+をする際はビーコンを２つ以上用意して行ってください。  
 
   
   
@@ -69,7 +69,15 @@ BLEビーコンをスキャンして部屋認識をするライブラリです�
 *部屋情報取得コード*  
 
     ContentResolver resolver = getContentResolver();
-    stringArray = dBaccess.monitoring(resolver);
+    // 入室した部屋情報の取得
+    for (int i = 0; i < dBaccess.getenterroom(resolver).length; i++) {
+        enterroom[i] = dBaccess.getenterroom(resolver)[i];
+    }
+    // 退室した部屋情報の取得
+    for (int i = 0; i < dBaccess.getexitroom(resolver).length; i++) {
+        exitroom[i] = dBaccess.getexitroom(resolver)[i];
+    }
+
 ### (2)データベースの変更を監視  
 *データベース変更監視コード*  
 
