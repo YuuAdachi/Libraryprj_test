@@ -23,7 +23,6 @@ public class UserDBHelper extends SQLiteOpenHelper {
         // データベースのテーブルを作成する
         sqLiteDatabase.execSQL("CREATE TABLE " + UserColumns.TABLE + " ("
                 + UserColumns._ID + " INTEGER PRIMARY KEY,"
-                //+ UserColumns.NAME + " TEXT,"
                 + UserColumns.BUILDING_NAME + " TEXT,"
                 + UserColumns.ROOM_NAME + " TEXT,"
                 + UserColumns.ROOM_NUMBER + " TEXT,"
@@ -31,7 +30,12 @@ public class UserDBHelper extends SQLiteOpenHelper {
                 + ");");
         // table row insert
         sqLiteDatabase.execSQL("insert into " + UserColumns.TABLE + "("
-                //+ UserColumns.NAME + ","
+                + UserColumns.BUILDING_NAME + ","
+                + UserColumns.ROOM_NAME + ","
+                + UserColumns.ROOM_NUMBER + ","
+                + UserColumns.DATETIME + ") values ('NULL_BUILDING', 'NULL_ROOMNAME', 'NULL_ROOMNUM', 'NULL_TIME');");
+
+        sqLiteDatabase.execSQL("insert into " + UserColumns.TABLE + "("
                 + UserColumns.BUILDING_NAME + ","
                 + UserColumns.ROOM_NAME + ","
                 + UserColumns.ROOM_NUMBER + ","

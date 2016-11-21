@@ -33,18 +33,9 @@ import java.util.TimerTask;
 
 public class Background  extends Service/* implements BootstrapNotifier */{
 
+    public Context context;
 
-    Context context;
-
-    //BeaconManager beaconManager;
-
-    //RegionBootstrap regionBootstrap2;
-
-    //Region region;
-
-    //BeaconApplication beaconApplication = new BeaconApplication();
-
-    String url = "http://192.168.54.167:60000/beacon_load.php";//http://192.168.100.211/beacon_load.php
+    public String url = "http://192.168.54.167:60000/beacon_load.php";//http://192.168.100.211/beacon_load.php
 
     ContentObserver mContentObserver = new ContentObserver(new Handler()) {
         @Override
@@ -60,30 +51,19 @@ public class Background  extends Service/* implements BootstrapNotifier */{
 
         ContentResolver resolver = getContentResolver();
 
-
         this.context = new Background();
 
         BeaconApplication beaconApplication = new BeaconApplication();
-        DBaccess dBaccess = new DBaccess();
+        //DBaccess dBaccess = new DBaccess();
 
         //beaconApplication.setNotify();
 
-        final BluetoothManager bluetoothManager2 = (BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);
+        final BluetoothManager bluetoothManager = (BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);
 
         int scan1 = 3000;//基本は4.6秒間隔//2600
         int scan2 = 2000;//基本は0.4秒間スキャン//800
 
-        beaconApplication.BeaconScan(resolver, bluetoothManager2, scan1,scan2,url);
-        //dBaccess.monitoring(resolver);
-
-        //beaconManager = BeaconManager.getInstanceForApplication(this);
-
-        //beaconApplication.Beaconscanalt2(context,url);
-
-        //beaconApplication.Beaconscanalt1(context);
-        //beaconApplication.onBeaconServiceConnect();
-
-        //getContentResolver().registerContentObserver(UserColumns.CONTENT_URI,true,mContentObserver);
+        beaconApplication.BeaconScan(resolver, bluetoothManager, scan1, scan2, url);
 
     }
 
@@ -91,7 +71,6 @@ public class Background  extends Service/* implements BootstrapNotifier */{
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         return super.onStartCommand(intent, flags, startId);
-
 
     }
 
