@@ -75,7 +75,7 @@ BLEビーコンをスキャンして部屋認識をするライブラリです�
     }
     // 退室した部屋情報の取得
     for (int i = 0; i < dBaccess.getexitroom(resolver).length; i++) {
-        exitroom[i] = dBaccess.getexitroom(resolver)[i];
+        exitroom[i] = dBaccess.getexitroom(resolver)[i];
     }
   
 ### (2)データベースの変更を監視  
