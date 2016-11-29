@@ -52,6 +52,8 @@ public class BeaconApplication{
     public boolean exittimersetcheck2 = false;
     // ビーコンが見つかるかどうかのフラグ
     public static boolean beaconwatch = false;
+    public static boolean beaconwatchbefor = false;
+    public static int scanstopcount = 0;
     private final Handler handler = new Handler();
 
     // 入室タイマー宣言
@@ -209,8 +211,9 @@ public class BeaconApplication{
             public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
 
                 // ここに結果に対して行う処理を記述する
-                //Log.d("exit","exit");
-                //beaconwatch = false;
+
+                // 交互にtrueとfalseが入れ替わるようにする
+                beaconwatch = !beaconwatch;
 
                 if(scanRecord.length > 30)
                 {
@@ -279,6 +282,12 @@ public class BeaconApplication{
 
                         // ここから↓入室判定されてないor体質判定された後の処理　enex=false ////////////////
                         if(!enex) {
+                            exettimercheck = false;
+                            exittimersetcheck = false;
+                            exettimercheck2 = false;
+                            exittimersetcheck2 = false;
+                            scanstopcount = 0;
+
                             // 前回と同じものか判定
                             boolean[] check = new boolean[3];
                             for( int i = 0; i < 3; i++){
@@ -312,17 +321,21 @@ public class BeaconApplication{
                             for (int i = 0; i < beacon_info2.length; i++) {
                                 enterbeacon[i] = beacon_info2[i];
                             }
+                            check = null;
                             //Log.d("exit",enterbeacon[0] + " " + enterbeacon[1] + " " + enterbeacon[2]);
                         }
                         //}
 
                         // ここから↓入室判定された後の処理　enex=true //////////////////////////////////
                         if(enex){
-                            //Log.d("exit",enterbeacon[0] + " " + enterbeacon[1] + " " + enterbeacon[2]);
+                            timersetcheck = false;
+                            timercheck = false;
+                            threshold = false;
+
                             // 退室タイマーの設定
                             if (!exittimersetcheck) {
                                 // ５秒
-                                exitCountDownTimer = new ExitCountDownTimer(5000, 10);
+                                exitCountDownTimer = new ExitCountDownTimer(5000, 100);
                             }
                             // 受信しているビーコンと入室判定したビーコンが同じものかチェック
                             boolean[] notifycheck = new boolean[3];
@@ -376,24 +389,31 @@ public class BeaconApplication{
 
 
         // ビーコンが見つからない場合の退室判定
-        /*
         TimerTask exit = new TimerTask() {
             public void run() {
                 handler.post(new Runnable() {
                     public void run() {
                         if (enex) {
+                            if(beaconwatch == beaconwatchbefor){
+                                scanstopcount++;
+                            }else {
+                                scanstopcount = 0;
+                            }
+                            beaconwatchbefor = beaconwatch;
+
                             // 退室タイマーの設定
                             if (!exittimersetcheck2) {
                                 // ５秒
-                                exitCountDownTimer2 = new ExitCountDownTimer2(10000, 100);
+                                exitCountDownTimer2 = new ExitCountDownTimer2(5000, 100);
                             }
-                            if (beaconwatch) {
+                            if (scanstopcount < 10) {
                                 if (exettimercheck2) {
                                     exitCountDownTimer2.cancel();
                                     exettimercheck2 = false;
                                     exittimersetcheck2 = false;
+                                    //Log.d("exit", Integer.toString(scanstopcount));
                                 }
-                            } else {
+                            } else{
                                 if (!exettimercheck2) {
                                     exitCountDownTimer2.start();
                                     exettimercheck2 = true;
@@ -404,35 +424,11 @@ public class BeaconApplication{
                     }
                 });
             }
-        };*/
-        /*
-        TimerTask exit = new TimerTask() {
-            public void run() {
-                if (enex) {
-                    // 退室タイマーの設定
-                    if (!exittimersetcheck2) {
-                        // ５秒
-                        exitCountDownTimer2 = new ExitCountDownTimer2(10000, 100);
-                    }
-                    if (beaconwatch) {
-                        if (exettimercheck2) {
-                            exitCountDownTimer2.cancel();
-                            exettimercheck2 = false;
-                            exittimersetcheck2 = false;
-                        }
-                    } else {
-                        if (!exettimercheck2) {
-                            exitCountDownTimer2.start();
-                            exettimercheck2 = true;
-                            exittimersetcheck2 = true;
-                        }
-                    }
-                }
-            }
         };
+
         Timer exittask = new Timer();
-        exittask.scheduleAtFixedRate(exit, 0, 10);
-        */
+        exittask.scheduleAtFixedRate(exit, 0, 100);
+
 
         TimerTask scanStart = new TimerTask() {
             public void run() {

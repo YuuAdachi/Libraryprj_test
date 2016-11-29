@@ -35,7 +35,9 @@ public class Background  extends Service/* implements BootstrapNotifier */{
 
     public Context context;
 
-    public String url = "http://192.168.54.167:60000/beacon_load.php";//http://192.168.100.211/beacon_load.php
+    //public String url = "http://192.168.54.167:60000/beacon_load.php";//http://192.168.100.211/beacon_load.php
+    public String url = "http://192.168.100.211/beacon_load.php";//http://192.168.100.211/beacon_load.php
+
 
     ContentObserver mContentObserver = new ContentObserver(new Handler()) {
         @Override
