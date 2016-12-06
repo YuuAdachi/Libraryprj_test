@@ -9,7 +9,7 @@ BLEビーコンをスキャンして部屋認識をするライブラリです�
 　・このライブラリを使用したアプリで部屋情報の共有  
  
 ダウンロードは以下から  
-<https://www.dropbox.com/s/izj2yoruda4ct7i/BeaconRR.jar?dl=0>  
+<https://www.dropbox.com/s/inudx505dyogc24/BeaconRR.jar?dl=0>  
   
 ! ライブラリを使用するには**Android 5.0**以上でお願いします。  
 ! クラス名、関数名は変更予定です。  
