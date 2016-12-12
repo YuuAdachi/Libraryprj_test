@@ -96,6 +96,11 @@ Android6.0以上にも対応しました。
             // 変更された時の処理を書く
         }
     };
+    // 以下はMainActivityでのみ記述
+    @Override
+        super.onResume();
+        getContentResolver().registerContentObserver(UserColumns.CONTENT_URI,true,mContentObserver);
+    }
 
 ***  
 ## その他  
