@@ -98,8 +98,14 @@ Android6.0以上にも対応しました。
     };
     // 以下はMainActivityでのみ記述
     @Override
+    protected void onResume() {
         super.onResume();
         getContentResolver().registerContentObserver(UserColumns.CONTENT_URI,true,mContentObserver);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getContentResolver().unregisterContentObserver(mContentObserver);
     }
 
 ***  
