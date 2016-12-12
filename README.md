@@ -107,9 +107,10 @@ Android6.0以上にも対応しました。
         super.onPause();
         getContentResolver().unregisterContentObserver(mContentObserver);
     }
-    // バックグラウンドで通知を受け取る場合は
-    // getContentResolver().registerContentObserver(UserColumns.CONTENT_URI,true,mContentObserver);
-    // をバックグラウンドで動かすクラスのonCreate()内に記述してください
+    // バックグラウンドで通知を受け取る場合は
+    // getContentResolver().registerContentObserver(UserColumns.CONTENT_URI,true,mContentObserver);
+    // をバックグラウンドで動かすクラスのonCreate()内に記述してください
+    
 ***  
 ## その他  
 ###改善、変更予定等  
